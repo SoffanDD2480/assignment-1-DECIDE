@@ -1,4 +1,4 @@
-from math import sqrt, sin, acos
+from math import sqrt, sin, acos, sin
 
 
 def lic_0_check(data_points, length1):
@@ -53,4 +53,6 @@ def calculate_angle(p1,p2,p3):
     cos_angle = scalar_product / (norm_v1 * norm_v2)
     angle = acos (cos_angle)
     return angle
+
+
 
