@@ -70,6 +70,32 @@ def lic_3_check (data_points, area1):
             return True
     return False
 
+def lic_4_check (data_points, q_pts, quads):
+    """function that checks the LIC 4. Returns True if there exists at least one set
+    of q_pts consecutive data points that lie in more than quads quadrants.
+    """
+
+    if q_pts <= 0 or len(data_points) < q_pts:
+        return False
+
+    for i in range(len(data_points) - q_pts + 1):
+        quadrants = set()
+        for j in range(i, i + q_pts):
+            x,y = data_points[j]
+            if x >= 0 and y >= 0:
+                quadrants.add(1)
+            elif x < 0 and y > 0:
+                quadrants.add(2)
+            elif x < 0 and y < 0:
+                quadrants.add(3)
+            elif x > 0 and y < 0:
+                quadrants.add(4)
+
+        if len(quadrants) > quads:
+            return True
+        
+    return False
+
 def lic_5_check(data_points):
     """ function that check the LIC 5. Returns True if there exists at least one set of two consecutive data points,
     (x[i],y[i]) and (x[j],y[j]), such that x[j] - x[i] < 0.
