@@ -54,4 +54,19 @@ def lic_2_check (data_points, epsilon):
     return False
 
 
+def lic_3_check (data_points, area1):
+    """function that checks the LIC 3. Returns True if there exists at least one set
+    of three consecutive data points which form a triangle with area greater than area1.
+    """
+    for i in range(len(data_points) - 2):
+        p1,p2,p3 = data_points[i], data_points[i+1], data_points[i+2]
+        area = 0.5 * abs((p1[0] - p3[0]) * (p2[1] - p1[1]) - (p1[0] - p2[0]) * (p3[1] - p1[1]))
+        
+        """if the area is 0, the points are aligned"""
+        if area == 0:
+            continue
+
+        if area > area1:
+            return True
+    return False
     
