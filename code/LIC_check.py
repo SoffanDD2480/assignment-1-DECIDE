@@ -69,4 +69,17 @@ def lic_3_check (data_points, area1):
         if area > area1:
             return True
     return False
-    
+
+def lic_5_check(data_points):
+    """ function that check the LIC 5. Returns True if there exists at least one set of two consecutive data points,
+    (x[i],y[i]) and (x[j],y[j]), such that x[j] - x[i] < 0.
+    """
+    for i in range(len(data_points) - 1):
+        x_i = data_points[i]
+        x_j = data_points[i+1]
+
+        if x_j[0] - x_i[0] < 0:
+            return True
+        
+    return False
+
