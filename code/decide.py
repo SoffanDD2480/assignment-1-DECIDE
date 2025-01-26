@@ -10,7 +10,7 @@ class Decide:
         self._PUM = [
             [True for _ in range(15)] for _ in range(15)
         ]  # Preliminary Unlocking Matrix
-        self.PUV = [False] * 15  # Preliminary Unlocking Vector
+        self._PUV = [False] * 15  # Preliminary Unlocking Vector
         self._FUV = [False] * 15  # Final Unlocking Vector
         self._LAUNCH = "NO"
 
@@ -122,12 +122,12 @@ class Decide:
         """
         for i in range(15):
             for j in range(15):
-                if self.LCM[i][j] == "ANDD":
-                    self.PUM[i][j] = self.CMV[i] and self.CMV[j]
-                elif self.LCM[i][j] == "ORR":
-                    self.PUM[i][j] = self.CMV[i] or self.CMV[j]
-                elif self.LCM[i][j] == "NOTUSED":
-                    self.PUM[i][j] = True
+                if self._LCM[i][j] == "ANDD":
+                    self._PUM[i][j] = self._CMV[i] and self._CMV[j]
+                elif self._LCM[i][j] == "ORR":
+                    self._PUM[i][j] = self._CMV[i] or self._CMV[j]
+                elif self._LCM[i][j] == "NOTUSED":
+                    self._PUM[i][j] = True
 
     def calculate_FUV(self):
         """
@@ -143,19 +143,25 @@ class Decide:
               row of PUM are True.
         """
         for i in range(15):
-            if not self.PUV[i]:  # If PUV[i] is False, automatically set FUV[i] to True
-                self.FUV[i] = True
+            if not self._PUV[i]:  # If PUV[i] is False, automatically set FUV[i] to True
+                self._FUV[i] = True
             else:  # If PUV[i] is True, check the corresponding row in PUM
-                self.FUV[i] = all(self.PUM[i])
+                self._FUV[i] = all(self._PUM[i])
+
+    def decide(self):
+        """
+        The main function to compute the final launch decision.
+        This function evaluates CMV, PUM, and FUV and determines whether
+        the launch is permitted.
+        """
+        self.calculate_CMV()
+        self.calculate_PUM()
+        self.calculate_FUV()
+
+        # If all values in the FUV are True, launch is permitted
+        self._LAUNCH = "YES" if all(self.FUV) else "NO"
+        return self._LAUNCH
 
 
 if __name__ == "__main__":
     decide = Decide()
-    # Example inputs
-    decide.NUMPOINTS = 5
-    decide.POINTS = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]
-    decide.LENGTH1 = 1.5
-    decide.LCM = [["ANDD"] * 15 for _ in range(15)]
-    decide.PUV = [True] * 15
-
-    print(f"Launch Decision: {decide.decide()}")

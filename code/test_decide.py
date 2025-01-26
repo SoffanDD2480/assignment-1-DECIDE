@@ -106,3 +106,113 @@ def test_points_length_out_of_bounds():
         ValueError, match="POINTS must contain between 0 and 100 points"
     ):
         decide.POINTS = [(0, 0)] * 101  # More than 100 points
+
+
+def test_calculate_PUM():
+    """
+    Test the calculate_PUM method with different LCM and CMV configurations.
+    """
+    decide = Decide()
+
+    # Example setup
+    decide._CMV = [
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+        False,
+        True,
+    ]
+
+    # Test LCM with all "ANDD"
+    decide._LCM = [["ANDD"] * 15 for _ in range(15)]
+    decide.calculate_PUM()
+    for i in range(15):
+        for j in range(15):
+            assert decide._PUM[i][j] == (decide._CMV[i] and decide._CMV[j]), (
+                f"PUM[{i}][{j}] should be CMV[{i}] AND CMV[{j}]"
+            )
+
+    # Test LCM with all "ORR"
+    decide._LCM = [["ORR"] * 15 for _ in range(15)]
+    decide.calculate_PUM()
+    for i in range(15):
+        for j in range(15):
+            assert decide._PUM[i][j] == (decide._CMV[i] or decide._CMV[j]), (
+                f"PUM[{i}][{j}] should be CMV[{i}] OR CMV[{j}]"
+            )
+
+    # Test LCM with all "NOTUSED"
+    decide._LCM = [["NOTUSED"] * 15 for _ in range(15)]
+    decide.calculate_PUM()
+    for i in range(15):
+        for j in range(15):
+            assert decide._PUM[i][j] is True, (
+                f"PUM[{i}][{j}] should be True for NOTUSED"
+            )
+
+    # Test Mixed LCM
+    decide._LCM = [
+        ["ANDD", "ORR", "NOTUSED", "ANDD", "ORR"] + ["NOTUSED"] * 10,
+        ["ORR", "ANDD", "ORR", "NOTUSED", "ANDD"] + ["NOTUSED"] * 10,
+    ] + [["NOTUSED"] * 15 for _ in range(13)]
+    decide.calculate_PUM()
+    assert decide._PUM[0][1] == (decide._CMV[0] or decide._CMV[1]), (
+        "PUM[0][1] should be CMV[0] OR CMV[1]"
+    )
+    assert decide._PUM[0][2] is True, "PUM[0][2] should be True for NOTUSED"
+    assert decide._PUM[1][4] == (decide._CMV[1] and decide._CMV[4]), (
+        "PUM[1][4] should be CMV[1] AND CMV[4]"
+    )
+
+
+def test_calculate_FUV():
+    """Test the calculate_FUV method with different configurations of PUV and PUM."""
+    decide = Decide()
+
+    # Test when PUV values are False
+    decide._PUV = [False] * 15
+    decide._PUM = [[False] * 15 for _ in range(15)]
+    decide.calculate_FUV()
+    assert all(decide._FUV), "All FUV values should be True when PUV is all False"
+
+    # Test when all PUV values are True, and all rows in PUM are True
+    decide._PUV = [True] * 15
+    decide._PUM = [[True] * 15 for _ in range(15)]
+    decide.calculate_FUV()
+    assert all(decide._FUV), (
+        "All FUV values should be True when PUV is all True and PUM rows are all True"
+    )
+
+    # Test when all PUV values are True, and some rows in PUM contain False
+    decide._PUV = [True] * 15
+    decide._PUM = [[True] * 15 for _ in range(15)]
+    decide._PUM[2][3] = False
+    decide.calculate_FUV()
+    assert not decide._FUV[2], "FUV[2] should be False because PUM[2] contains a False"
+    for i in range(15):
+        if i != 2:
+            assert decide._FUV[i], (
+                f"FUV[{i}] should be True because row {i} in PUM is all True"
+            )
+
+    # Test Mixed PUV values
+    decide._PUV = [True, False, True, False, True] + [False] * 10
+    decide._PUM = [[True] * 15 for _ in range(15)]
+    decide.calculate_FUV()
+    for i in range(15):
+        if decide._PUV[i]:
+            assert decide._FUV[i], (
+                f"FUV[{i}] should be True because PUV[{i}] is True and PUM[{i}] is all True"
+            )
+        else:
+            assert decide._FUV[i], f"FUV[{i}] should be True because PUV[{i}] is False"
