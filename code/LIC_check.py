@@ -82,7 +82,7 @@ def lic_4_check (data_points, q_pts, quads):
         quadrants = set()
         for j in range(i, i + q_pts):
             x,y = data_points[j]
-            if x > 0 and y > 0:
+            if x >= 0 and y >= 0:
                 quadrants.add(1)
             elif x < 0 and y > 0:
                 quadrants.add(2)
