@@ -319,3 +319,107 @@ def test_lic3_check(data_points, area1, expected):
 )
 def test_lic10_check(data_points, e_pts, f_pts, area1, numpoints, expected):
     assert lic_10_check(data_points, e_pts, f_pts, area1, numpoints) == expected
+
+
+@pytest.mark.parametrize(
+    "p1, p2, p3, expected",
+    [
+        ((0, 0), (0, 0), (0, 0), 0),
+        ((1, 1), (1, 1), (1, 1), 0),
+        ((0, 1), (1, 0), (-1, 0), 1),
+        ((0, 10), (-1, -7), (3, -11), 36),
+        ((-10, 5), (-10, -5), (10, 0), 100),
+        ((-9, -3234), (-7, -8), (60903, 8), 98247814),
+    ],
+)
+def test_calculate_triangle_area(p1, p2, p3, expected):
+    assert calculate_triangle_area(p1, p2, p3) == expected
+
+
+@pytest.mark.parametrize(
+    "data_points, e_pts, f_pts, area1, area2, expected",
+    [
+        (
+            [(0, 0), (1, 1), (2, 2), (3, 3)],
+            1,
+            1,
+            1.0,
+            2.0,
+            False,
+        ),  # insufficient data
+        (
+            [
+                (0, 0),
+                (4, 0),
+                (4, 3),
+                (0, 3),
+                (1, 1),
+                (2, 2),
+            ],
+            2,
+            1,
+            2.0,
+            4.0,
+            True,
+        ),  # both conditions
+        (
+            [
+                (0, 0),
+                (3, 0),
+                (3, 4),
+                (0, 4),
+                (1, 1),
+                (4, 1),
+            ],
+            1,
+            1,
+            2.0,
+            5.0,
+            True,
+        ),  # both conditions
+        (
+            [
+                (0, 0),
+                (5, 0),
+                (5, 5),
+                (0, 5),
+                (1, 1),
+            ],
+            1,
+            1,
+            10.0,
+            5.0,
+            False,
+        ),  # only condition A
+        (
+            [
+                (0, 0),
+                (1, 0),
+                (1, 1),
+                (2, 1),
+                (2, 2),
+            ],
+            1,
+            1,
+            1.0,
+            1.0,
+            False,
+        ),  # only condition B
+        (
+            [
+                (0, 0),
+                (1, 0),
+                (1, 1),
+                (2, 1),
+                (2, 2),
+            ],
+            1,
+            1,
+            1.0,
+            -1.0,
+            False,
+        ),  # invalid AREA2
+    ],
+)
+def test_lic_14_check(data_points, e_pts, f_pts, area1, area2, expected):
+    assert lic_14_check(data_points, e_pts, f_pts, area1, area2) == expected
