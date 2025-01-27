@@ -109,3 +109,43 @@ def lic_5_check(data_points):
         
     return False
 
+def lic_6_check(data_points, dist, n_pts):
+    """function that check the LIC 6. Returns True if there exists at least one set of n_pts consecutive data points
+    such that at least one of the point lies a distance greater than dist from the line joining the first and last of these n_pts points.
+    If the first and last points of these N PTS are identical, then the calculated distance 
+    to compare with DIST will be the distance from the coincident point to all other points of
+    the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
+    """
+
+    if (len(data_points) < 3) or (n_pts > len(data_points)) or (dist < 0):
+        return False
+
+    for i in range(len(data_points) - n_pts + 1):
+        p1 = data_points[i]
+        p2 = data_points[i + n_pts - 1]
+
+        if p1 == p2:
+            for j in range(i + 1, i + n_pts - 1):
+                p = data_points[j]
+                distance_calculated = sqrt((p[0] - p1[0])**2 + (p[1] - p1[1])**2)
+                if distance_calculated > dist:
+                    return True
+                
+        else:
+            for j in range(i + 1, i + n_pts - 1):
+                p = data_points[j]
+                distance_calculated = abs((p2[0] - p1[0]) * (p1[1] - p[1]) - (p1[0] - p[0]) * (p2[1] - p1[1])) / sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
+                if distance_calculated > dist:
+                    return True
+                
+    return False
+
+
+
+
+                
+
+    
+       
+
+
