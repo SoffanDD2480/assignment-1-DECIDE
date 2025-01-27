@@ -241,6 +241,30 @@ def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
     return False
 
 
+def lic_11_check(data_points, g_pts, numpoints):
+    """There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
+    exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
+    condition is not met when NUMPOINTS < 3.
+    1 ≤ G PTS ≤ NUMPOINTS−2
+    """
+
+    # Check for appropriate values for numpoints and g_pts
+    if numpoints < 3 or 1 > g_pts > numpoints - 2:
+        return False
+
+    # Try to two points such that X[j] - X[i] < 0
+    for index in range(numpoints - g_pts - 1):
+        (x_1, _) = data_points[index]                   # Represents X[i]
+        (x_2, _) = data_points[index + g_pts + 1]       # Represents X[j]
+
+        if x_2 - x_1 < 0:
+            # Found a match
+            return True
+
+    # No match found
+    return False
+
+
 def calculate_triangle_area(p1, p2, p3) -> float:
     """
     Calculate the area of a triangle given three points.
