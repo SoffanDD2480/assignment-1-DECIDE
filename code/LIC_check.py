@@ -204,6 +204,42 @@ def lic_7_check(data_points, k_pts, length1):
             return True
     return False
 
+
+def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
+    """There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive intervening
+    points, respectively, that are the vertices of a triangle with area greater
+    than AREA1. The condition is not met when NUMPOINTS < 5.
+    1 ≤ E PTS, 1 ≤ F PTS
+    E PTS+F PTS ≤ NUMPOINTS−3
+    """
+
+    # Check for the appropriate numpoints values
+    # Numpoints must be 5 or larger (because of minimal distances between the points),
+    # and E PTS + F PTS ≤ NUMPOINTS − 3
+    if numpoints < 5 or e_pts + f_pts > numpoints - 3:
+        return False
+
+    # Check for appropriate e_pts and f_pts values,
+    # where e_pts, f_pts >= 1
+    if e_pts < 1 or f_pts < 1:
+        return False
+
+    # Try to find a matching triangle of area larger than AREA1
+    for index in range(numpoints - e_pts - f_pts - 2):
+        (x_1, y_1) = data_points[index]
+        (x_2, y_2) = data_points[index + e_pts + 1]
+        (x_3, y_3) = data_points[index + e_pts + f_pts + 2]
+
+        # Using following formula: 1/2 |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
+        area_triangle = 0.5 * abs(x_1*(y_2 - y_3) + x_2*(y_3 - y_1) + x_3*(y_1 - y_2))
+
+        if area_triangle > area1:
+            # Found a match
+            return True
+
+    # No match found
+    return False
+
 def calculate_triangle_area(p1, p2, p3) -> float:
     """
     Calculate the area of a triangle given three points.
