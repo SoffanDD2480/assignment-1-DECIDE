@@ -226,12 +226,12 @@ def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
 
     # Try to find a matching triangle of area larger than AREA1
     for index in range(numpoints - e_pts - f_pts - 2):
-        (x_1, y_1) = data_points[index]
-        (x_2, y_2) = data_points[index + e_pts + 1]
-        (x_3, y_3) = data_points[index + e_pts + f_pts + 2]
+        p1 = data_points[index]
+        p2 = data_points[index + e_pts + 1]
+        p3 = data_points[index + e_pts + f_pts + 2]
 
         # Using following formula: 1/2 |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
-        area_triangle = 0.5 * abs(x_1*(y_2 - y_3) + x_2*(y_3 - y_1) + x_3*(y_1 - y_2))
+        area_triangle = calculate_triangle_area(p1, p2, p3)
 
         if area_triangle > area1:
             # Found a match
@@ -244,6 +244,9 @@ def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
 def calculate_triangle_area(p1, p2, p3) -> float:
     """
     Calculate the area of a triangle given three points.
+
+    Uses following formula:
+    1/2 |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
     """
     area = 0.5 * fabs(
         (p1[0] * (p2[1] - p3[1]) + p2[0] * (p3[1] - p1[1]) + p3[0] * (p1[1] - p2[1]))
