@@ -206,16 +206,6 @@ def test_lic3_check(data_points, area1, expected):
             False
         ),
 
-        # Test no points larger than AREA1, area of [P0, P2, P4] (=50) < AREA1 (=60)
-        (
-            [(0, 0), (1, 0), (10, 0), (1, 1), (0, 10)],
-            1,
-            1,
-            60,
-            5,
-            False
-        ),
-
         # Test with all points the same
         (
             [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0)],
@@ -234,6 +224,16 @@ def test_lic3_check(data_points, area1, expected):
             1,
             5,
             False
+        ),
+
+        # Test no points larger than AREA1, area of [P0, P2, P4] (=50) < AREA1 (=60)
+        (
+                [(0, 0), (1, 0), (10, 0), (1, 1), (0, 10)],
+                1,
+                1,
+                60,
+                5,
+                False
         ),
 
         # Test Area of [P0, P2, P4] (=25) == AREA1 (=50)
@@ -302,6 +302,16 @@ def test_lic3_check(data_points, area1, expected):
             2,
             2,
             40,
+            9,
+            True
+        ),
+
+        # Test with more point combinations being larger than the area
+        (
+            [(0, 1), (0, 0), (1, 0), (1, 1), (10, 0), (2, 2), (3, 3), (0, 10), (4, 4)],
+            2,
+            2,
+            0.1,
             9,
             True
         ),
