@@ -1,6 +1,7 @@
 from math import sqrt, acos, pi, fabs
 from sympy import Eq, solve, symbols
 
+
 def lic_0_check(data_points, length1):
     """Function for checking requirement LIC 0. Returns True
     if there exists 2 consecutive points with a distance
@@ -57,7 +58,6 @@ def lic_1_check(data_points, radius1):
     return False
 
 
-def calculate_angle(p1,p2,p3):
 def calculate_angle(p1, p2, p3):
     """function that allows to calculate the angle given the three point.
     The second point is the vertex of the angle
@@ -239,6 +239,7 @@ def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
 
     # No match found
     return False
+
 
 def calculate_triangle_area(p1, p2, p3) -> float:
     """
