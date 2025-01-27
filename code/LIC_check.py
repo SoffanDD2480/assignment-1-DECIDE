@@ -150,6 +150,7 @@ def lic_5_check(data_points):
         
     return False
 
+
 def lic_6_check(data_points, dist, n_pts):
     """function that check the LIC 6. Returns True if there exists at least one set of n_pts consecutive data points
     such that at least one of the point lies a distance greater than dist from the line joining the first and last of these n_pts points.
@@ -181,3 +182,19 @@ def lic_6_check(data_points, dist, n_pts):
                 
     return False
 
+
+def lic_7_check(data_points, k_pts, length1):
+    """Function for checking requirement LIC 7. Returns True
+    if there exists 2 points, K_PTS consecutive interveining
+    points apart with distance LENGTH1 between them, False
+    otherwise.
+    """
+    if len(data_points) < 3 or len(data_points)-2 < k_pts:
+        return False
+    for index in range(len(data_points) - k_pts - 1):
+        (x_1, y_1) = data_points[index]
+        (x_2, y_2) = data_points[index + k_pts + 1]
+        distance = sqrt((x_2 - x_1)**2 + (y_2 - y_1)**2)
+        if distance > length1:
+            return True
+    return False
