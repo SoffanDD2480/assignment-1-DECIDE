@@ -289,6 +289,79 @@ class TestAllLicChecks:
     def test_lic5_check(self, data_points, expected):
         assert lic_5_check(data_points) == expected
     
+
+    @pytest.mark.parametrize(
+        "data_points, dist, n_pts, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                1,
+                3,
+                False
+            ),
+
+            # Test with less points than n_pts
+            (
+                [(0, 0), (1, 0)],
+                1,
+                3,
+                False
+            ),
+
+            # Test with three points such that distance bewteen them is more than dist
+            (
+                [(0,0), (1, 2), (2, 0)],
+                1,
+                3,
+                True
+            ),
+
+            # Test with three points such that distance bewteen them is less than dist
+            (
+                [(0,0), (1, 1), (2, 0)],
+                2,
+                3,
+                False
+            ),
+
+            # Test with two coicident points and one point at a distance more than dist
+            (
+                [(0,0), (0,0), (2, 0)],
+                1,
+                3,
+                True
+            ),
+
+            # Test with two coicident points and one point at a distance less than dist
+            (
+                [(0,0), (0,0), (1, 0)],
+                2,
+                3,
+                False
+            ),
+
+            # Test with three points at the same distance
+            (
+                [(0,0), (1, 0), (2, 0)],
+                1,
+                3,
+                False
+            ),
+
+            # Test with multiple sets of points, one satisfies the condition
+            (
+                [(0, 0), (1, 1), (2, 0), (3, 3)],
+                1,
+                3,
+                True
+            ),
+        ]
+    )
+    def test_lic6_check(self, data_points, dist, n_pts, expected):
+        assert lic_6_check(data_points, dist, n_pts) == expected
+
+
     @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
         [
