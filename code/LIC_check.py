@@ -245,8 +245,8 @@ def lic_8_check(data_points, a_pts, b_pts, radius1):
 
     for i in range(len(data_points) - a_pts - b_pts - 2):
         p1 = data_points[i]
-        p2 = data_points[i + a_pts]
-        p3 = data_points[i + a_pts + b_pts]
+        p2 = data_points[i + a_pts + 1]
+        p3 = data_points[i + a_pts + b_pts + 2]
 
         dist1 = calculate_distance(p1, p2)
         dist2 = calculate_distance(p3, p1)
