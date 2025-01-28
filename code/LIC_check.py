@@ -3,7 +3,7 @@ from sympy import Eq, solve, symbols
 
 
 def calculate_distance(p1, p2):
-    return sqrt(fabs(p2[0] - p1[0]) ** 2 + fabs(p2[1] - p1[1]) ** 2)
+    return sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
 
 def calculate_triangle_area(p1, p2, p3) -> float:
