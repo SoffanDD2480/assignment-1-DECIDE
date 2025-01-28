@@ -71,7 +71,7 @@ def lic_1_check(data_points, radius1):
                 equation = Eq(y - coord[1], -(1/slope)*(x - coord[0]))
                 equations.append(equation)
         circumcenter = solve((equations[0], equations[1]), (x, y))
-        if sqrt((circumcenter[x] - x_1)**2 + (circumcenter[y] - y_1)**2) > radius1:
+        if calculate_distance(circumcenter, (x_1, x_2)) > radius1:
             return True
     return False
 
@@ -217,6 +217,25 @@ def lic_7_check(data_points, k_pts, length1):
         p2 = data_points[index + k_pts + 1]
         distance = calculate_distance(p1, p2)
         if distance > length1:
+            return True
+    return False
+
+
+def lic_9_check(data_points, c_pts, d_pts, epsilon):
+    """Function for checking requirement LIC 9. Returns True
+    if there exits 3 points, separated by C PTs and
+    D PTS respectively, that form an angle that fulfills
+    |angle - PI| > Epsilon"""
+    if len(data_points) < 3 + c_pts + d_pts:
+        return False
+    for index in range(len(data_points) - c_pts - d_pts - 2):
+        p1, p2, p3 = (data_points[index],
+                      data_points[index + c_pts + 1],
+                      data_points[index + c_pts + d_pts + 2])
+        angle = calculate_angle(p1, p2, p3)
+        if angle is None:
+            continue
+        if abs(angle - pi) > epsilon:
             return True
     return False
 
