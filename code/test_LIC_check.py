@@ -177,6 +177,69 @@ class TestAllLicChecks:
         assert lic_3_check(data_points, area1) == expected
 
     @pytest.mark.parametrize(
+        "data_points, q_pts, quads, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                1,
+                1,
+                False
+            ),
+
+            # Less data points than q_pts
+            (
+                [(0, 0), (1, 0)],
+                3,
+                1,
+                False
+            ),
+
+            # Test with all points in the same quadrant but quadrants covered <= quads
+            (
+                [(0, 0), (1, 1), (2, 2), (3, 3)],
+                4,
+                1,
+                False
+            ),
+
+            # Test with all points in different quadrants
+            (
+                [(0, 0), (-1, 1), (2, -2), (-3, -3)],
+                4,
+                1,
+                True
+            ),
+
+            # Test with points distributed in two quadrants and quadrants covered > quads
+            (
+                [(1,1), (-1,1), (2,2)],
+                3,
+                1,
+                True
+            ),
+
+            # Test with three point distribuition in three quadrants and quadrants covered > quads
+            (
+                [(1,1), (-1,1), (2,-2)],
+                3,
+                1,
+                True
+            ),
+
+            #Test with all the points in the origin
+            (
+                [(0,0), (0,0), (0,0), (0,0)],
+                4,
+                1,
+                False
+            ),
+        ]
+    )
+    def test_lic4_check(self, data_points, q_pts, quads, expected):
+        assert lic_4_check(data_points, q_pts, quads) == expected
+
+    @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
         [
             # TODO: Fix mismatch of len(data_points) and Numpoints
