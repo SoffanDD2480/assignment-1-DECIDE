@@ -484,7 +484,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 1,
-                False,
+                True,
             ),
 
             # Test with all points in the origin

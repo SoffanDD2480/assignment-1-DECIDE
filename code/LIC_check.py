@@ -193,26 +193,27 @@ def lic_6_check(data_points, dist, n_pts):
     the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
     """
 
-    if len(data_points) < 3 or n_pts > len(data_points) or dist < 0:
+    if (len(data_points) < 3) or (n_pts > len(data_points)) or (dist < 0):
         return False
 
     for i in range(len(data_points) - n_pts + 1):
         p1 = data_points[i]
         p2 = data_points[i + n_pts - 1]
 
-        if p1 == p2:  # If the first and last points are the same
+        if p1 == p2:
             for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
                 distance_calculated = calculate_distance(p1, p)
                 if distance_calculated > dist:
                     return True
-        else:  # If the first and last points are different
+                
+        else:
             for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
                 distance_calculated = abs((p2[0] - p1[0]) * (p1[1] - p[1]) - (p1[0] - p[0]) * (p2[1] - p1[1])) / sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
                 if distance_calculated > dist:
                     return True
-
+                
     return False
 
 
@@ -244,8 +245,8 @@ def lic_8_check(data_points, a_pts, b_pts, radius1):
 
     for i in range(len(data_points) - a_pts - b_pts - 2):
         p1 = data_points[i]
-        p2 = data_points[i + a_pts + 1]
-        p3 = data_points[i + a_pts + b_pts + 2]
+        p2 = data_points[i + a_pts]
+        p3 = data_points[i + a_pts + b_pts]
 
         dist1 = calculate_distance(p1, p2)
         dist2 = calculate_distance(p3, p1)
