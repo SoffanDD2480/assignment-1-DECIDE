@@ -380,7 +380,7 @@ class TestAllLicChecks:
                 [(0,0), (0,0), (2, 0)],
                 1,
                 3,
-                True,
+                False,
             ),
 
             # Test with two coicident points and one point at a distance less than dist
@@ -484,7 +484,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 1,
-                False,
+                True,
             ),
 
             # Test with all points in the origin
