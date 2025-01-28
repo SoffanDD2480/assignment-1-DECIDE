@@ -261,7 +261,10 @@ def lic_8_check(data_points, a_pts, b_pts, radius1):
 
         # colinearity check
         if area == 0:
-            continue
+            if max(dist1, dist2, dist3) <= 2 * radius1:
+                continue
+            else:
+                return True
 
         circum_radius = (dist1 * dist2 * dist3) / (4 * area)
         if circum_radius > radius1:
