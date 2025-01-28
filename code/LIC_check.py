@@ -205,7 +205,7 @@ def lic_7_check(data_points, k_pts, length1):
     return False
 
 
-def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
+def lic_10_check(data_points, numpoints, e_pts, f_pts, area1):
     """There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive intervening
     points, respectively, that are the vertices of a triangle with area greater
     than AREA1. The condition is not met when NUMPOINTS < 5.
@@ -241,7 +241,7 @@ def lic_10_check(data_points, e_pts, f_pts, area1, numpoints):
     return False
 
 
-def lic_11_check(data_points, g_pts, numpoints):
+def lic_11_check(data_points, numpoints, g_pts):
     """There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
     exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
     condition is not met when NUMPOINTS < 3.
