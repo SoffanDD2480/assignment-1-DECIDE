@@ -200,19 +200,19 @@ def lic_6_check(data_points, dist, n_pts):
         p1 = data_points[i]
         p2 = data_points[i + n_pts - 1]
 
-        if p1 == p2:
-            for j in range(i + 1, i + n_pts):
+        if p1 == p2:  # If the first and last points are the same
+            for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
                 distance_calculated = calculate_distance(p1, p)
                 if distance_calculated > dist:
                     return True
-        else:
+        else:  # If the first and last points are different
             for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
                 distance_calculated = abs((p2[0] - p1[0]) * (p1[1] - p[1]) - (p1[0] - p[0]) * (p2[1] - p1[1])) / sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
                 if distance_calculated > dist:
                     return True
-                
+
     return False
 
 
@@ -239,36 +239,31 @@ def lic_8_check(data_points, a_pts, b_pts, radius1):
     consecutive intervening points, respectively, that cannot be contained within or on a circle of
     radius RADIUS1. The condition is not met when NUMPOINTS < 5
     """
-    if len(data_points) < 5 or a_pts < 1 or b_pts < 1 or (a_pts + b_pts > len(data_points) -3): 
+    if len(data_points) < 5 or a_pts < 1 or b_pts < 1 or (a_pts + b_pts > len(data_points) - 3):
         return False
-    
+
     for i in range(len(data_points) - a_pts - b_pts - 2):
         p1 = data_points[i]
         p2 = data_points[i + a_pts + 1]
         p3 = data_points[i + a_pts + b_pts + 2]
-        
-        dist1 = calculate_distance(p1, p2) 
-        dist2 = calculate_distance(p3, p1) 
-        dist3 = calculate_distance(p1, p2) 
-        
-        if max(dist1, dist2, dist3) > 2*radius1:
+
+        dist1 = calculate_distance(p1, p2)
+        dist2 = calculate_distance(p3, p1)
+        dist3 = calculate_distance(p3, p2)
+
+        if max(dist1, dist2, dist3) > 2 * radius1:
             return True
-        
-        # area of the triangle formed by the three points
+
         semi_perimeter = (dist1 + dist2 + dist3) / 2
         area = sqrt(semi_perimeter * (semi_perimeter - dist1) * (semi_perimeter - dist2) * (semi_perimeter - dist3))
 
-        # colinearity check
         if area == 0:
-            if max(dist1, dist2, dist3) <= 2 * radius1:
-                continue
-            else:
-                return True
+            continue
 
         circum_radius = (dist1 * dist2 * dist3) / (4 * area)
         if circum_radius > radius1:
             return True
-        
+
     return False
 
 
