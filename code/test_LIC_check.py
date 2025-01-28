@@ -5,6 +5,35 @@ from math import pi
 
 class TestAllLicChecks:
     @pytest.mark.parametrize(
+        "p1, p2, p3, expected",
+        [
+            ((0, 0), (0, 0), (0, 0), 0),
+            ((1, 1), (1, 1), (1, 1), 0),
+            ((0, 1), (1, 0), (-1, 0), 1),
+            ((0, 10), (-1, -7), (3, -11), 36),
+            ((-10, 5), (-10, -5), (10, 0), 100),
+            ((-9, -3234), (-7, -8), (60903, 8), 98247814),
+        ],
+    )
+    def test_calculate_triangle_area(self, p1, p2, p3, expected):
+        assert calculate_triangle_area(p1, p2, p3) == expected
+
+    @pytest.mark.parametrize(
+        "p1, p2, expected",
+        [
+            ((0, 0), (0, 0), 0),
+            ((1, 1), (1, 1), 0),
+            ((-1, -1), (2, 3), 5),
+            ((0, 0), (-6, -8), 10),
+            ((1, 0), (0, 1), sqrt(2)),
+            ((-2468, -3702), (2468, 0), 6170),
+            ((-10, -10), (-6, -7), 5),
+        ],
+    )
+    def test_calculate_distance(self, p1, p2, expected):
+        assert calculate_distance(p1, p2) == expected
+
+    @pytest.mark.parametrize(
         "data_points, length1, expected",
         [
             ([(0, 0), (3, 4)], 5, False),  # Distance = 5
@@ -590,20 +619,6 @@ class TestAllLicChecks:
     )
     def test_lic12_check(self, data_points, numpoints, k_pts, length1, length2, expected):
         assert lic_12_check(data_points, numpoints, k_pts, length1, length2) == expected
-
-    @pytest.mark.parametrize(
-        "p1, p2, p3, expected",
-        [
-            ((0, 0), (0, 0), (0, 0), 0),
-            ((1, 1), (1, 1), (1, 1), 0),
-            ((0, 1), (1, 0), (-1, 0), 1),
-            ((0, 10), (-1, -7), (3, -11), 36),
-            ((-10, 5), (-10, -5), (10, 0), 100),
-            ((-9, -3234), (-7, -8), (60903, 8), 98247814),
-        ],
-    )
-    def test_calculate_triangle_area(self, p1, p2, p3, expected):
-        assert calculate_triangle_area(p1, p2, p3) == expected
 
     @pytest.mark.parametrize(
         "data_points, e_pts, f_pts, area1, area2, expected",

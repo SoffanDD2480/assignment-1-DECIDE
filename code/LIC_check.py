@@ -2,7 +2,7 @@ from math import sqrt, acos, pi, fabs
 from sympy import Eq, solve, symbols
 
 
-def calc_distance(p1, p2):
+def calculate_distance(p1, p2):
     return sqrt(fabs(p2[0] - p1[0]) ** 2 + fabs(p2[1] - p1[1]) ** 2)
 
 
@@ -28,7 +28,7 @@ def lic_0_check(data_points, length1):
     for index in range(len(data_points) - 1):
         p1 = data_points[index]
         p2 = data_points[index + 1]
-        dist = calc_distance(p1, p2)
+        dist = calculate_distance(p1, p2)
         if dist > length1:
             return True
     return False
@@ -44,9 +44,9 @@ def lic_1_check(data_points, radius1):
     for index in range(len(data_points) - 2):
         (x_1, y_1), (x_2, y_2), (x_3, y_3) = p1, p2, p3 = \
             (data_points[index], data_points[index + 1], data_points[index + 2])
-        dist1 = calc_distance(p1, p2) > 2*radius1
-        dist2 = calc_distance(p1, p3) > 2*radius1
-        dist3 = calc_distance(p2, p3) > 2*radius1
+        dist1 = calculate_distance(p1, p2) > 2 * radius1
+        dist2 = calculate_distance(p1, p3) > 2 * radius1
+        dist3 = calculate_distance(p2, p3) > 2 * radius1
         if dist1 or dist2 or dist3:
             return True
         midpoints = [((x_1 + x_2)/2, (y_1 + y_2)/2),
@@ -190,7 +190,7 @@ def lic_6_check(data_points, dist, n_pts):
         if p1 == p2:
             for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
-                distance_calculated = calc_distance(p1, p)
+                distance_calculated = calculate_distance(p1, p)
                 if distance_calculated > dist:
                     return True
                 
@@ -215,7 +215,7 @@ def lic_7_check(data_points, k_pts, length1):
     for index in range(len(data_points) - k_pts - 1):
         p1 = data_points[index]
         p2 = data_points[index + k_pts + 1]
-        distance = calc_distance(p1, p2)
+        distance = calculate_distance(p1, p2)
         if distance > length1:
             return True
     return False
@@ -307,7 +307,7 @@ def lic_12_check(data_points, numpoints, k_pts, length1, length2):
         p1 = data_points[index]
         p2 = data_points[index + k_pts + 1]
 
-        dist = calc_distance(p1, p2)
+        dist = calculate_distance(p1, p2)
 
         if not larger_than_length1 and dist > length1:
             larger_than_length1 = True
