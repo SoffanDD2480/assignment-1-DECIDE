@@ -265,6 +265,18 @@ def lic_11_check(data_points, numpoints, g_pts):
     return False
 
 
+def lic_12_check(data_points, numpoints, k_pts, length1, length2):
+    """There exists at least one set of two data points, separated by exactly K PTS consecutive
+    intervening points, which are a distance greater than the length, LENGTH1, apart. In addition,
+    there exists at least one set of two data points (which can be the same or different from
+    the two data points just mentioned), separated by exactly K PTS consecutive intervening
+    points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
+    for the LIC to be true. The condition is not met when NUMPOINTS < 3.
+    0 ≤ LENGTH2
+    """
+    pass
+
+
 def calculate_triangle_area(p1, p2, p3) -> float:
     """
     Calculate the area of a triangle given three points.
