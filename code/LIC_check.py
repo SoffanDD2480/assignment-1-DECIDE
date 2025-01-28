@@ -391,25 +391,51 @@ def lic_12_check(data_points, numpoints, k_pts, length1, length2):
     return False
 
 
-def lic_13_check(data_points, radius1, a_pts, b_pts):
-    """Function for LIC 13. Similar to
-    LIC 1 implementation"""
+def lic_13_check(data_points, radius1, radius2, a_pts, b_pts):
+    """Function for LIC 13.
+
+    Condition A: There exists at least
+    one set of three data points, separated by exactly a_pts and
+    b_pts consecutive points, respectively, that cannot be contained
+    by a circle of radius radius1.
+
+    Condition B: There exists at least one set of three data points
+    separated by exactly a_pts and b_pts intervening points, respectively,
+    that can be contained by a circle of radius radius2. """
     if len(data_points) < a_pts + b_pts + 3 or len(data_points) < 5:
         return False
+    condition_a = False
+    condition_b = False
     for index in range(len(data_points) - a_pts - b_pts - 2):
         p1, p2, p3 = (data_points[index],
                       data_points[index + a_pts + 1],
                       data_points[index + a_pts + b_pts + 2])
-        dist1 = calculate_distance(p1, p2) > 2*radius1
-        dist2 = calculate_distance(p1, p3) > 2*radius1
-        dist3 = calculate_distance(p2, p3) > 2*radius1
-        if dist1 or dist2 or dist3:
-            return True
+        distances = [calculate_distance(p1, p2), calculate_distance(p1, p3), calculate_distance(p2, p3)]
+        if max(distances) > 2 * radius1:
+            condition_a = True
+        if max(distances) < 2 * radius2:
+            max_index = distances.index(max(distances))
+            if max_index == 0:
+                center = ((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2)
+                if calculate_distance(center, p3) < 2 * radius2:
+                    condition_b = True
+            elif max_index == 1:
+                center = ((p1[0] + p3[0]) / 2, (p1[1] + p3[1]) / 2)
+                if calculate_distance(center, p2) < 2 * radius2:
+                    condition_b = True
+            else:
+                center = ((p2[0] + p3[0]) / 2, (p2[1] + p3[1]) / 2)
+                if calculate_distance(center, p1) < 2 * radius2:
+                    condition_b = True
         circumcenter = calculate_circumcenter(p1, p2, p3)
-        print(circumcenter)
         if circumcenter is None:
             continue
-        if calculate_distance(circumcenter, p1) > radius1:
+        circumradius = calculate_distance(circumcenter, p1)
+        if circumradius > radius1:
+            condition_a = True
+        if circumradius < radius2:
+            condition_b = True
+        if condition_a and condition_b:
             return True
     return False
 
@@ -460,5 +486,3 @@ def lic_14_check(
             return True
 
     return condition_a_met and condition_b_met
-  
- 
