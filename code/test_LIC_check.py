@@ -464,7 +464,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 40,
-                False
+                False,
             ),
 
             # Test NUMPOINTS < 5
@@ -474,7 +474,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 40,
-                False
+                False,
 
             ),
 
@@ -485,7 +485,7 @@ class TestAllLicChecks:
                 0,
                 1,
                 40,
-                False
+                False,
             ),
 
             # Test F_PTS < 1
@@ -495,7 +495,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 40,
-                False
+                False,
             ),
 
             # E PTS+F PTS > NUMPOINTS−3
@@ -505,7 +505,7 @@ class TestAllLicChecks:
                 1,
                 2,
                 40,
-                False
+                False,
             ),
 
             # Test with all points the same
@@ -515,7 +515,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 50,
-                False
+                False,
             ),
 
             # Test with all on the same line
@@ -525,7 +525,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 1,
-                False
+                False,
             ),
 
             # Test no points larger than AREA1, area of [P0, P2, P4] (=50) < AREA1 (=60)
@@ -535,7 +535,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 60,
-                False
+                False,
             ),
 
             # Test Area of [P0, P2, P4] (=25) == AREA1 (=50)
@@ -545,7 +545,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 50,
-                False
+                False,
             ),
 
             # Test Area of [P0, P2, P4] (=25) > AREA1 (=40)
@@ -555,7 +555,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 40,
-                True
+                True,
             ),
 
             # Test with 6 elements, [P0, P2, P4] are offset to [P1, P3, P5], doesn't start with the element in sequence
@@ -565,7 +565,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 40,
-                True
+                True,
             ),
 
             # Test with 7 elements, doesn't end with the element in sequence
@@ -575,7 +575,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 40,
-                True
+                True,
             ),
 
             # Test with more than minimal offset e_pts
@@ -585,7 +585,7 @@ class TestAllLicChecks:
                 2,
                 1,
                 40,
-                True
+                True,
             ),
 
             # Test with more than minimal offset f_pts
@@ -595,7 +595,7 @@ class TestAllLicChecks:
                 1,
                 2,
                 40,
-                True
+                True,
             ),
 
             # Test with more than minimal offset both e_pts and f_pts
@@ -605,7 +605,7 @@ class TestAllLicChecks:
                 2,
                 2,
                 40,
-                True
+                True,
             ),
 
             # Test with more point combinations being larger than the area
@@ -615,9 +615,9 @@ class TestAllLicChecks:
                 2,
                 2,
                 0.1,
-                True
+                True,
             ),
-        ]
+        ],
     )
     def test_lic10_check(self, data_points, numpoints, e_pts, f_pts, area1, expected):
         assert lic_10_check(data_points, numpoints, e_pts, f_pts, area1) == expected
@@ -630,7 +630,7 @@ class TestAllLicChecks:
                 [],
                 0,
                 1,
-                False
+                False,
             ),
 
             # Test NUMPOINTS < 3
@@ -638,7 +638,7 @@ class TestAllLicChecks:
                 [(1, 0), (0, 0)],
                 2,
                 1,
-                False
+                False,
             ),
 
             # Test G_PTS < 1
@@ -646,7 +646,7 @@ class TestAllLicChecks:
                 [(1, 0), (0, 0), (0, 1)],
                 3,
                 0,
-                False
+                False,
             ),
 
             # Test G_PTS > NUMPOINTS−2
@@ -654,7 +654,7 @@ class TestAllLicChecks:
                 [(1, 0), (0, 0), (0, 1)],
                 3,
                 2,
-                False
+                False,
             ),
 
             # Test with all points the same
@@ -662,7 +662,7 @@ class TestAllLicChecks:
                 [(0, 0), (0, 0), (0, 0)],
                 3,
                 1,
-                False
+                False,
             ),
 
             # Test x_1 < x_2
@@ -670,7 +670,7 @@ class TestAllLicChecks:
                 [(0, 1), (0, 0), (1, 0)],
                 3,
                 1,
-                False
+                False,
             ),
 
             # Test x_1 == x_2
@@ -678,7 +678,7 @@ class TestAllLicChecks:
                 [(0, 1), (0, 0), (0, 2)],
                 3,
                 1,
-                False
+                False,
             ),
 
             # Test x_1 > x_2
@@ -686,7 +686,7 @@ class TestAllLicChecks:
                 [(1, 0), (0, 0), (0, 1)],
                 3,
                 1,
-                True
+                True,
             ),
 
             # Test with extra element in the beginning
@@ -694,7 +694,7 @@ class TestAllLicChecks:
                 [(-2, 2), (1, 0), (0, 0), (0, 1)],
                 4,
                 1,
-                True
+                True,
             ),
 
             # Test with extra element in at the end
@@ -702,7 +702,7 @@ class TestAllLicChecks:
                 [(-2, 2), (1, 0), (0, 0), (0, 1), (3, 3)],
                 5,
                 1,
-                True
+                True,
             ),
 
             # Test with non-minimal offset
@@ -710,16 +710,16 @@ class TestAllLicChecks:
                 [(-2, 2), (1, 0), (0, 0), (3, 3), (0, 1), (4, 4)],
                 6,
                 2,
-                True
+                True,
             ),
             # Test with multiple right answers
             (
                 [(-2, 2), (1, 0), (5, 5), (3, 3), (1, 1), (4, 4), (2, 2)],
                 7,
                 2,
-                True
+                True,
             ),
-        ]
+        ],
     )
     def test_lic11_check(self, data_points, numpoints, g_pts, expected):
         assert lic_11_check(data_points, numpoints, g_pts) == expected
@@ -738,7 +738,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 1,
-                False
+                False,
             ),
 
             # Test NUMPOINTS < 3
@@ -748,7 +748,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 1,
-                False
+                False,
             ),
 
             # Test K_PTS < 1 (assuming it should be that K_PTS >= 1, as with LIC 12)
@@ -758,7 +758,7 @@ class TestAllLicChecks:
                 0,
                 0,
                 2,
-                False
+                False,
             ),
 
             # Test K_PTS > NUMPOINTS−2 (assuming, same as with LIC 11)
@@ -768,7 +768,7 @@ class TestAllLicChecks:
                 2,
                 0,
                 2,
-                False
+                False,
             ),
 
             # Test with all points the same
@@ -778,7 +778,7 @@ class TestAllLicChecks:
                 1,
                 1,
                 2,
-                False
+                False,
             ),
 
             # Test with length1 < 0
@@ -788,7 +788,7 @@ class TestAllLicChecks:
                 1,
                 -1,
                 2,
-                False
+                False,
             ),
 
             # Test with length2 < 0
@@ -798,7 +798,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 -1,
-                False
+                False,
             ),
 
             # Test with same dist, length1 (=0) < calc dist (=1), but calc dist (=1) > length2 (=0)
@@ -808,7 +808,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 0,
-                False
+                False,
             ),
 
             # Test with same dist, length2 (=0) > calc dist (=1), but calc dist (=1) < length1 (=2)
@@ -818,7 +818,7 @@ class TestAllLicChecks:
                 1,
                 2,
                 2,
-                False
+                False,
             ),
 
             # Test with same dist, length1 (=0) < calc dist (=1) < length2 (=2)
@@ -828,7 +828,7 @@ class TestAllLicChecks:
                 1,
                 0,
                 2,
-                True
+                True,
             ),
 
             # Test with 2 dist, dist1 (=1) < length2 (=5), length1 (=3) < dist2 (=4) < length2 (=5)
@@ -838,7 +838,7 @@ class TestAllLicChecks:
                 1,
                 3,
                 5,
-                True
+                True,
             ),
 
             # Test with 2 dist, dist1 (=1) < length2 (=5), length1 (=3) < dist2 (=10)
@@ -848,7 +848,7 @@ class TestAllLicChecks:
                 1,
                 3,
                 5,
-                True
+                True,
             ),
 
             # Test with 2 dist, dist1 (=1) < length2 (=2), length1 (=3) < dist2 (=4)
@@ -858,7 +858,7 @@ class TestAllLicChecks:
                 1,
                 3,
                 2,
-                True
+                True,
             ),
 
             # Test with 2 dist, dist1 (=4) > length1 (=3), length2 (=2) > dist2 (=1)
@@ -868,7 +868,7 @@ class TestAllLicChecks:
                 1,
                 3,
                 2,
-                True
+                True,
             ),
 
             # Test with extra distance
@@ -878,7 +878,7 @@ class TestAllLicChecks:
                 1,
                 3,
                 5,
-                True
+                True,
             ),
 
             # Test non-minimal offset
@@ -888,9 +888,9 @@ class TestAllLicChecks:
                 2,
                 3,
                 5,
-                True
+                True,
             ),
-        ]
+        ],
     )
     def test_lic12_check(self, data_points, numpoints, k_pts, length1, length2, expected):
         assert lic_12_check(data_points, numpoints, k_pts, length1, length2) == expected
