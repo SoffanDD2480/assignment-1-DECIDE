@@ -201,7 +201,7 @@ def lic_6_check(data_points, dist, n_pts):
         p2 = data_points[i + n_pts - 1]
 
         if p1 == p2:
-            for j in range(i + 1, i + n_pts - 1):
+            for j in range(i + 1, i + n_pts):
                 p = data_points[j]
                 distance_calculated = calculate_distance(p1, p)
                 if distance_calculated > dist:
