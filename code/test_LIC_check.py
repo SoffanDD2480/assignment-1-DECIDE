@@ -322,6 +322,110 @@ def test_lic10_check(data_points, e_pts, f_pts, area1, numpoints, expected):
 
 
 @pytest.mark.parametrize(
+    "data_points, g_pts, numpoints, expected",
+    [
+        # Test no data_points
+        (
+                [],
+                1,
+                0,
+                False
+        ),
+
+        # Test NUMPOINTS < 3
+        (
+                [(1, 0), (0, 0)],
+                1,
+                2,
+                False
+
+        ),
+
+        # Test G_PTS < 1
+        (
+                [(1, 0), (0, 0), (0, 1)],
+                0,
+                3,
+                False
+        ),
+
+        # Test G_PTS > NUMPOINTS−2
+        (
+                [(1, 0), (0, 0), (0, 1)],
+                2,
+                3,
+                False
+        ),
+
+        # Test with all points the same
+        (
+                [(0, 0), (0, 0), (0, 0)],
+                1,
+                3,
+                False
+        ),
+
+        # Test x_1 < x_2
+        (
+                [(0, 1), (0, 0), (1, 0)],
+                1,
+                3,
+                False
+        ),
+
+        # Test x_1 == x_2
+        (
+                [(0, 1), (0, 0), (0, 2)],
+                1,
+                3,
+                False
+        ),
+
+        # Test x_1 > x_2
+        (
+                [(1, 0), (0, 0), (0, 1)],
+                1,
+                3,
+                True
+        ),
+
+        # Test with extra element in the beginning
+        (
+                [(-2, 2), (1, 0), (0, 0), (0, 1)],
+                1,
+                4,
+                True
+        ),
+
+        # Test with extra element in at the end
+        (
+                [(-2, 2), (1, 0), (0, 0), (0, 1), (3, 3)],
+                1,
+                5,
+                True
+        ),
+
+        # Test with non-minimal offset
+        (
+                [(-2, 2), (1, 0), (0, 0), (3, 3), (0, 1), (4, 4)],
+                2,
+                6,
+                True
+        ),
+        # Test with multiple right answers
+        (
+                [(-2, 2), (1, 0), (5, 5), (3, 3), (1, 1), (4, 4), (2, 2)],
+                2,
+                7,
+                True
+        ),
+    ]
+)
+def test_lic11_check(data_points, g_pts, numpoints, expected):
+    assert lic_11_check(data_points, g_pts, numpoints) == expected
+
+
+@pytest.mark.parametrize(
     "p1, p2, p3, expected",
     [
         ((0, 0), (0, 0), (0, 0), 0),
