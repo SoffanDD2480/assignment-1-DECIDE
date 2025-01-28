@@ -227,6 +227,281 @@ class TestAllLicChecks:
         assert lic_3_check(data_points, area1) == expected
 
     @pytest.mark.parametrize(
+        "data_points, q_pts, quads, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                1,
+                1,
+                False,
+            ),
+
+            # Less data points than q_pts
+            (
+                [(0, 0), (1, 0)],
+                3,
+                1,
+                False,
+            ),
+
+            # Test with all points in the same quadrant but quadrants covered <= quads
+            (
+                [(0, 0), (1, 1), (2, 2), (3, 3)],
+                4,
+                1,
+                False,
+            ),
+
+            # Test with all points in different quadrants
+            (
+                [(0, 0), (-1, 1), (2, -2), (-3, -3)],
+                4,
+                1,
+                True,
+            ),
+
+            # Test with points distributed in two quadrants and quadrants covered > quads
+            (
+                [(1,1), (-1,1), (2,2)],
+                3,
+                1,
+                True,
+            ),
+
+            # Test with three point distribuition in three quadrants and quadrants covered > quads
+            (
+                [(1,1), (-1,1), (2,-2)],
+                3,
+                1,
+                True,
+            ),
+
+            #Test with all the points in the origin
+            (
+                [(0,0), (0,0), (0,0), (0,0)],
+                4,
+                1,
+                False,
+            ),
+        ],
+    )
+    def test_lic4_check(self, data_points, q_pts, quads, expected):
+        assert lic_4_check(data_points, q_pts, quads) == expected
+
+    
+    @pytest.mark.parametrize(
+        "data_points, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                False,
+            ),
+
+            # Test with a single point
+            (
+                [(0, 0)],
+                False,
+            ),
+
+            # Test with two consecutive points such that x[j] - x[i] >= 0
+            (
+                [(0, 0), (1, 0)],
+                False,
+            ),
+
+            # Test with two consecutive points such that x[j] - x[i] < 0
+            (
+                [(1, 0), (0, 0)],
+                True,
+            ),
+
+            # Test with three consecutive points such that x[j] - x[i] >= 0
+            (
+                [(0, 0), (1, 0), (2, 0)],
+                False,
+            ),
+
+            # Test with three consecutive points with at least one couple such that x[j] - x[i] < 0
+            (
+                [(0, 0), (2, 0), (1, 0)],
+                True,
+            ),
+
+            # Test with three consecutive points such that x[j] - x[i] < 0
+            (
+                [(3, 0), (2, 0), (1, 0)],
+                True,
+            ),
+        ],
+    )
+    def test_lic5_check(self, data_points, expected):
+        assert lic_5_check(data_points) == expected
+    
+
+    @pytest.mark.parametrize(
+        "data_points, dist, n_pts, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                1,
+                3,
+                False,
+            ),
+
+            # Test with less points than n_pts
+            (
+                [(0, 0), (1, 0)],
+                1,
+                3,
+                False,
+            ),
+
+            # Test with three points such that distance bewteen them is more than dist
+            (
+                [(0,0), (1, 2), (2, 0)],
+                1,
+                3,
+                True,
+            ),
+
+            # Test with three points such that distance bewteen them is less than dist
+            (
+                [(0,0), (1, 1), (2, 0)],
+                2,
+                3,
+                False,
+            ),
+
+            # Test with two coicident points and one point at a distance more than dist
+            (
+                [(0,0), (0,0), (2, 0)],
+                1,
+                3,
+                True,
+            ),
+
+            # Test with two coicident points and one point at a distance less than dist
+            (
+                [(0,0), (0,0), (1, 0)],
+                2,
+                3,
+                False,
+            ),
+
+            # Test with three points at the same distance
+            (
+                [(0,0), (1, 0), (2, 0)],
+                1,
+                3,
+                False,
+            ),
+
+            # Test with multiple sets of points, one satisfies the condition
+            (
+                [(0, 0), (1, 1), (2, 0), (3, 3)],
+                1,
+                3,
+                True,
+            ),
+        ],
+    )
+    def test_lic6_check(self, data_points, dist, n_pts, expected):
+        assert lic_6_check(data_points, dist, n_pts) == expected
+
+
+    @pytest.mark.parametrize(
+       "data_points, a_pts, b_pts, radius1, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                1,
+                1,
+                1,
+                False,
+            ),
+
+            # Test with less then 5 points
+            (
+                [(0,0), (1,1), (2,2), (3,3)],
+                1,
+                1,
+                1,
+                False,
+            ),
+
+            # Test with a_pts < 1
+            (
+                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                0,
+                1,
+                1,
+                False,
+            ),
+
+            # Test with b_pts < 1
+            (
+                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                1,
+                0,
+                1,
+                False,
+            ),
+
+            # Test with a_pts + b_pts > numpoints - 3
+            (
+                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                2,
+                2,
+                1,
+                False,
+            ),
+
+            # Test with three points in a circle with radius1
+            (
+                [(0,0), (1,0), (2,0), (1,1), (0,2)],
+                1,
+                1,
+                3,
+                False,
+            ),
+
+            # Test with three points NOT in a circle with radius1
+            (
+                [(0,0), (1,0), (2,0), (1,1), (0,6)],
+                1,
+                1,
+                1,
+                True,
+            ),
+
+            # Test with collinear points
+            (
+                [(0,0), (1,0), (2,0), (3,0), (4,0)],
+                1,
+                1,
+                1,
+                False,
+            ),
+
+            # Test with all points in the origin
+            (
+                [(0,0), (0,0), (0,0), (0,0), (0,0)],
+                1,
+                1,
+                1,
+                False,
+            ),
+        ],
+    )
+    def test_lic8_check(self, data_points, a_pts, b_pts, radius1, expected):
+        assert lic_8_check(data_points, a_pts, b_pts, radius1) == expected
+        
+
+    @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
         [
             # TODO: Fix mismatch of len(data_points) and Numpoints
