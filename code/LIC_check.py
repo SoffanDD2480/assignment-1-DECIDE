@@ -234,6 +234,42 @@ def lic_7_check(data_points, k_pts, length1):
     return False
 
 
+def lic_8_check(data_points, a_pts, b_pts, radius1):
+    """Function for checking requirement LIC 8. Returns True
+    if There exists at least one set of three data points separated by exactly A PTS and B PTS
+    consecutive intervening points, respectively, that cannot be contained within or on a circle of
+    radius RADIUS1. The condition is not met when NUMPOINTS < 5
+    """
+    if len(data_points) < 5 or a_pts < 1 or b_pts < 1 or (a_pts + b_pts > len(data_points) -3): 
+        return False
+    
+    for i in range(len(data_points) - a_pts - b_pts - 2):
+        p1 = data_points[i]
+        p2 = data_points[i + a_pts + 1]
+        p3 = data_points[i + a_pts + b_pts + 2]
+        
+        dist1 = sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2) 
+        dist2 = sqrt((p3[0] - p1[0])**2 + (p3[1] - p1[1])**2) 
+        dist3 = sqrt((p3[0] - p2[0])**2 + (p3[1] - p2[1])**2)
+        
+        if max(dist1, dist2, dist3) > 2*radius1:
+            return True
+        
+        # area of the triangle formed by the three points
+        semi_perimeter = (dist1 + dist2 + dist3) / 2
+        area = sqrt(semi_perimeter * (semi_perimeter - dist1) * (semi_perimeter - dist2) * (semi_perimeter - dist3))
+
+        # colinearity check
+        if area == 0:
+            continue
+
+        circum_radius = (dist1 * dist2 * dist3) / (4 * area)
+        if circum_radius > radius1:
+            return True
+        
+    return False
+
+
 def lic_9_check(data_points, c_pts, d_pts, epsilon):
     """Function for checking requirement LIC 9. Returns True
     if there exits 3 points, separated by C PTs and
@@ -355,25 +391,52 @@ def lic_12_check(data_points, numpoints, k_pts, length1, length2):
     return False
 
 
-def lic_13_check(data_points, radius1, a_pts, b_pts):
-    """Function for LIC 13. Similar to
-    LIC 1 implementation"""
+def lic_13_check(data_points, radius1, radius2, a_pts, b_pts):
+    """Function for LIC 13.
+
+    Condition A: There exists at least
+    one set of three data points, separated by exactly a_pts and
+    b_pts consecutive points, respectively, that cannot be contained
+    by a circle of radius radius1.
+
+    Condition B: There exists at least one set of three data points
+    separated by exactly a_pts and b_pts intervening points, respectively,
+    that can be contained by a circle of radius radius2. """
     if len(data_points) < a_pts + b_pts + 3 or len(data_points) < 5:
         return False
+    condition_a = False
+    condition_b = False
     for index in range(len(data_points) - a_pts - b_pts - 2):
         p1, p2, p3 = (data_points[index],
                       data_points[index + a_pts + 1],
                       data_points[index + a_pts + b_pts + 2])
-        dist1 = calculate_distance(p1, p2) > 2*radius1
-        dist2 = calculate_distance(p1, p3) > 2*radius1
-        dist3 = calculate_distance(p2, p3) > 2*radius1
-        if dist1 or dist2 or dist3:
-            return True
+        distances = [calculate_distance(p1, p2), calculate_distance(p1, p3), calculate_distance(p2, p3)]
+        max_distance = max(distances)
+        if max_distance > 2 * radius1:
+            condition_a = True
+        if max_distance <= 2 * radius2:
+            max_index = distances.index(max_distance)
+            if max_index == 0:
+                center = ((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2)
+                if calculate_distance(center, p3) <= 2 * radius2:
+                    condition_b = True
+            elif max_index == 1:
+                center = ((p1[0] + p3[0]) / 2, (p1[1] + p3[1]) / 2)
+                if calculate_distance(center, p2) <= 2 * radius2:
+                    condition_b = True
+            else:
+                center = ((p2[0] + p3[0]) / 2, (p2[1] + p3[1]) / 2)
+                if calculate_distance(center, p1) <= 2 * radius2:
+                    condition_b = True
         circumcenter = calculate_circumcenter(p1, p2, p3)
-        print(circumcenter)
         if circumcenter is None:
             continue
-        if calculate_distance(circumcenter, p1) > radius1:
+        circumradius = calculate_distance(circumcenter, p1)
+        if circumradius > radius1:
+            condition_a = True
+        if circumradius < radius2:
+            condition_b = True
+        if condition_a and condition_b:
             return True
     return False
 
