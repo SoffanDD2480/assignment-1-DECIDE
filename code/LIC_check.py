@@ -417,15 +417,15 @@ def lic_13_check(data_points, radius1, radius2, a_pts, b_pts):
             max_index = distances.index(max(distances))
             if max_index == 0:
                 center = ((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2)
-                if calculate_distance(center, p3) < 2 * radius2:
+                if calculate_distance(center, p3) <= 2 * radius2:
                     condition_b = True
             elif max_index == 1:
                 center = ((p1[0] + p3[0]) / 2, (p1[1] + p3[1]) / 2)
-                if calculate_distance(center, p2) < 2 * radius2:
+                if calculate_distance(center, p2) <= 2 * radius2:
                     condition_b = True
             else:
                 center = ((p2[0] + p3[0]) / 2, (p2[1] + p3[1]) / 2)
-                if calculate_distance(center, p1) < 2 * radius2:
+                if calculate_distance(center, p1) <= 2 * radius2:
                     condition_b = True
         circumcenter = calculate_circumcenter(p1, p2, p3)
         if circumcenter is None:
