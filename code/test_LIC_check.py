@@ -421,7 +421,7 @@ class TestAllLicChecks:
         assert lic_11_check(data_points, numpoints, g_pts) == expected
 
     @pytest.mark.parametrize(
-        "numpoints, data_points, k_pts, length1, length2, expected",
+        "data_points, numpoints, k_pts, length1, length2, expected",
         [
             # TODO: Assuming length1 >= 0 right?
             # TODO: Assuming k_pts > 1 right?
