@@ -249,7 +249,7 @@ def lic_11_check(data_points, g_pts, numpoints):
     """
 
     # Check for appropriate values for numpoints and g_pts
-    if numpoints < 3 or 1 > g_pts > numpoints - 2:
+    if numpoints < 3 or g_pts < 1 or g_pts > numpoints - 2:
         return False
 
     # Try to two points such that X[j] - X[i] < 0
