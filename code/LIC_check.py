@@ -71,7 +71,7 @@ def lic_1_check(data_points, radius1):
                 equation = Eq(y - coord[1], -(1/slope)*(x - coord[0]))
                 equations.append(equation)
         circumcenter = solve((equations[0], equations[1]), (x, y))
-        if calculate_distance(circumcenter, (x_1, x_2)) > radius1:
+        if calculate_distance(circumcenter, (x_1, y_1)) > radius1:
             return True
     return False
 
