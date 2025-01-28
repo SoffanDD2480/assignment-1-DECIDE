@@ -239,6 +239,56 @@ class TestAllLicChecks:
     def test_lic4_check(self, data_points, q_pts, quads, expected):
         assert lic_4_check(data_points, q_pts, quads) == expected
 
+    
+    @pytest.mark.parametrize(
+        "data_points, expected",
+        [
+            # Test no data_points
+            (
+                [],
+                False
+            ),
+
+            # Test with a single point
+            (
+                [(0, 0)],
+                False
+            ),
+
+            # Test with two consecutive points such that x[j] - x[i] >= 0
+            (
+                [(0, 0), (1, 0)],
+                False
+            )
+
+            # Test with two consecutive points such that x[j] - x[i] < 0
+            (
+                [(1, 0), (0, 0)],
+                True
+            ),
+
+            # Test with three consecutive points such that x[j] - x[i] >= 0
+            (
+                [(0, 0), (1, 0), (2, 0)],
+                False
+            ),
+
+            # Test with three consecutive points with at least one couple such that x[j] - x[i] < 0
+            (
+                [(0, 0), (2, 0), (1, 0)],
+                True
+            ),
+
+            # Test with three consecutive points such that x[j] - x[i] < 0
+            (
+                [(3, 0), (2, 0), (1, 0)],
+                True
+            )
+        ]
+    )
+    def test_lic5_check(self, data_points, expected):
+        assert lic_5_check(data_points) == expected
+    
     @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
         [
