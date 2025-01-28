@@ -2,6 +2,23 @@ from math import sqrt, acos, pi, fabs
 from sympy import Eq, solve, symbols
 
 
+def calc_distance(p1, p2):
+    return sqrt(fabs(p2[0] - p1[0]) ** 2 + fabs(p2[1] - p1[1]) ** 2)
+
+
+def calculate_triangle_area(p1, p2, p3) -> float:
+    """
+    Calculate the area of a triangle given three points.
+
+    Uses following formula:
+    1/2 |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
+    """
+    area = 0.5 * fabs(
+        (p1[0] * (p2[1] - p3[1]) + p2[0] * (p3[1] - p1[1]) + p3[0] * (p1[1] - p2[1]))
+    )
+    return area
+
+
 def lic_0_check(data_points, length1):
     """Function for checking requirement LIC 0. Returns True
     if there exists 2 consecutive points with a distance
@@ -9,9 +26,9 @@ def lic_0_check(data_points, length1):
     if len(data_points) < 2:
         return False
     for index in range(len(data_points) - 1):
-        (x_1, y_1) = data_points[index]
-        (x_2, y_2) = data_points[index + 1]
-        dist = sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2)
+        p1 = data_points[index]
+        p2 = data_points[index + 1]
+        dist = calc_distance(p1, p2)
         if dist > length1:
             return True
     return False
@@ -25,10 +42,11 @@ def lic_1_check(data_points, radius1):
     if len(data_points) < 3:
         return False
     for index in range(len(data_points) - 2):
-        [(x_1, y_1), (x_2, y_2), (x_3, y_3)] = (data_points[index], data_points[index + 1], data_points[index + 2])
-        dist1 = sqrt((x_2 - x_1)**2 + (y_2 - y_1)**2) > 2*radius1
-        dist2 = sqrt((x_3 - x_1)**2 + (y_3 - y_1)**2) > 2*radius1
-        dist3 = sqrt((x_3 - x_2)**2 + (y_3 - y_2)**2) > 2*radius1
+        (x_1, y_1), (x_2, y_2), (x_3, y_3) = p1, p2, p3 = \
+            (data_points[index], data_points[index + 1], data_points[index + 2])
+        dist1 = calc_distance(p1, p2) > 2*radius1
+        dist2 = calc_distance(p1, p3) > 2*radius1
+        dist3 = calc_distance(p2, p3) > 2*radius1
         if dist1 or dist2 or dist3:
             return True
         midpoints = [((x_1 + x_2)/2, (y_1 + y_2)/2),
@@ -102,9 +120,7 @@ def lic_3_check(data_points, area1):
     """
     for i in range(len(data_points) - 2):
         p1, p2, p3 = data_points[i], data_points[i + 1], data_points[i + 2]
-        area = 0.5 * abs(
-            (p1[0] - p3[0]) * (p2[1] - p1[1]) - (p1[0] - p2[0]) * (p3[1] - p1[1])
-        )
+        area = calculate_triangle_area(p1, p2, p3)
 
         """if the area is 0, the points are aligned"""
         if area == 0:
@@ -174,7 +190,7 @@ def lic_6_check(data_points, dist, n_pts):
         if p1 == p2:
             for j in range(i + 1, i + n_pts - 1):
                 p = data_points[j]
-                distance_calculated = sqrt((p[0] - p1[0])**2 + (p[1] - p1[1])**2)
+                distance_calculated = calc_distance(p1, p)
                 if distance_calculated > dist:
                     return True
                 
@@ -197,9 +213,9 @@ def lic_7_check(data_points, k_pts, length1):
     if len(data_points) < 3 or len(data_points)-2 < k_pts:
         return False
     for index in range(len(data_points) - k_pts - 1):
-        (x_1, y_1) = data_points[index]
-        (x_2, y_2) = data_points[index + k_pts + 1]
-        distance = sqrt((x_2 - x_1)**2 + (y_2 - y_1)**2)
+        p1 = data_points[index]
+        p2 = data_points[index + k_pts + 1]
+        distance = calc_distance(p1, p2)
         if distance > length1:
             return True
     return False
@@ -265,17 +281,46 @@ def lic_11_check(data_points, numpoints, g_pts):
     return False
 
 
-def calculate_triangle_area(p1, p2, p3) -> float:
+def lic_12_check(data_points, numpoints, k_pts, length1, length2):
+    """There exists at least one set of two data points, separated by exactly K PTS consecutive
+    intervening points, which are a distance greater than the length, LENGTH1, apart. In addition,
+    there exists at least one set of two data points (which can be the same or different from
+    the two data points just mentioned), separated by exactly K PTS consecutive intervening
+    points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
+    for the LIC to be true. The condition is not met when NUMPOINTS < 3.
+    0 ≤ LENGTH2
     """
-    Calculate the area of a triangle given three points.
 
-    Uses following formula:
-    1/2 |x_1(y_2 - y_3) + x_2(y_3 - y_1) + x_3(y_1 - y_2)|
-    """
-    area = 0.5 * fabs(
-        (p1[0] * (p2[1] - p3[1]) + p2[0] * (p3[1] - p1[1]) + p3[0] * (p1[1] - p2[1]))
-    )
-    return area
+    # Check for appropriate values for numpoints and g_pts
+    if numpoints < 3 or k_pts < 1 or k_pts > numpoints - 2:
+        return False
+
+    # Check for lengths to be 0 or larger
+    if length1 < 0 or length2 < 0:
+        return False
+
+    larger_than_length1 = False
+    smaller_than_length2 = False
+
+    # Try to find distances to satisfy that at least a distance > length1, and a distance is < length2
+    for index in range(numpoints - k_pts - 1):
+        p1 = data_points[index]
+        p2 = data_points[index + k_pts + 1]
+
+        dist = calc_distance(p1, p2)
+
+        if not larger_than_length1 and dist > length1:
+            larger_than_length1 = True
+
+        if not smaller_than_length2 and dist < length2:
+            smaller_than_length2 = True
+
+        if larger_than_length1 and smaller_than_length2:
+            # Found a match
+            return True
+
+    # No match found
+    return False
 
 
 def lic_14_check(
