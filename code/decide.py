@@ -1,39 +1,54 @@
 import math
+from LIC_check import *
+
+
+def gen_input(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = [line.strip() for line in file]
+    numpoints = int(lines[0])
+    data_points = [tuple(map(float, line.split()))
+                   for line in lines[1:numpoints + 1]]
+    float_parameters = list(map(float, lines[numpoints + 1:numpoints + 9]))
+    int_parameters = list(map(float, lines[numpoints + 9:numpoints + 20]))
+    parameters = float_parameters + int_parameters
+    lcm = [line.split() for line in lines[numpoints + 20:numpoints + 35]]
+    puv = [line == 'true' for line in lines[numpoints+35:]]
+    return numpoints, data_points, parameters, lcm, puv
 
 
 class Decide:
-    def __init__(self):
-        self._NUMPOINTS = None
-        self._POINTS = []  # List of planar data points
+    def __init__(self, numpoints, data_points, parameters, lcm, puv):
+        self._NUMPOINTS = numpoints
+        self._POINTS = data_points  # List of planar data points
         self._CMV = [False] * 15  # Conditions Met Vector
-        self._LCM = [["NOTUSED"] * 15 for _ in range(15)]  # Logical Connector Matrix
+        self._LCM = lcm  # Logical Connector Matrix
         self._PUM = [
             [True for _ in range(15)] for _ in range(15)
         ]  # Preliminary Unlocking Matrix
-        self._PUV = [False] * 15  # Preliminary Unlocking Vector
+        self._PUV = puv  # Preliminary Unlocking Vector
         self._FUV = [False] * 15  # Final Unlocking Vector
         self._LAUNCH = "NO"
 
         # Parameters
-        self.LENGTH1 = 0
-        self.RADIUS1 = 0
-        self.EPSILON = 0
-        self.AREA1 = 0
-        self.LENGTH2 = 0
-        self.RADIUS2 = 0
-        self.AREA2 = 0
-        self.Q_PTS = 0
-        self.QUADS = 0
-        self.DIST = 0
-        self.N_PTS = 0
-        self.K_PTS = 0
-        self.A_PTS = 0
-        self.B_PTS = 0
-        self.C_PTS = 0
-        self.D_PTS = 0
-        self.E_PTS = 0
-        self.F_PTS = 0
-        self.G_PTS = 0
+        self.LENGTH1 = parameters[0]
+        self.RADIUS1 = parameters[1]
+        self.EPSILON = parameters[2]
+        self.AREA1 = parameters[3]
+        self.LENGTH2 = parameters[4]
+        self.RADIUS2 = parameters[5]
+        self.AREA2 = parameters[6]
+        self.DIST = parameters[7]
+        self.QUADS = parameters[9]
+        self.Q_PTS = parameters[8]
+        self.N_PTS = parameters[10]
+        self.K_PTS = parameters[11]
+        self.A_PTS = parameters[12]
+        self.B_PTS = parameters[13]
+        self.C_PTS = parameters[14]
+        self.D_PTS = parameters[15]
+        self.E_PTS = parameters[16]
+        self.F_PTS = parameters[17]
+        self.G_PTS = parameters[18]
 
     @property
     def NUMPOINTS(self):
@@ -76,6 +91,51 @@ class Decide:
         if self.NUMPOINTS is None:  # Set NUMPOINTS if it hasn't been set
             self.NUMPOINTS = len(value)
 
+    def evaluate_lic_0(self):
+        return lic_0_check(self._POINTS, self.LENGTH1)
+
+    def evaluate_lic_1(self):
+        return lic_1_check(self._POINTS, self.RADIUS1)
+
+    def evaluate_lic_2(self):
+        return lic_2_check(self._POINTS, self.EPSILON)
+
+    def evaluate_lic_3(self):
+        return lic_3_check(self._POINTS, self.AREA1)
+
+    def evaluate_lic_4(self):
+        return lic_4_check(self._POINTS, self.Q_PTS, self.QUADS)
+
+    def evaluate_lic_5(self):
+        return lic_5_check(self._POINTS)
+
+    def evaluate_lic_6(self):
+        return lic_6_check(self._POINTS, self.DIST, self.N_PTS)
+
+    def evaluate_lic_7(self):
+        return lic_7_check(self._POINTS, self.K_PTS, self.LENGTH1)
+
+    def evaluate_lic_8(self):
+        return lic_8_check(self._POINTS, self.A_PTS, self.B_PTS, self.RADIUS1)
+
+    def evaluate_lic_9(self):
+        return lic_9_check(self._POINTS, self.C_PTS, self.D_PTS, self.EPSILON)
+
+    def evaluate_lic_10(self):
+        return lic_10_check(self._POINTS, self.NUMPOINTS, self.E_PTS, self.F_PTS, self.AREA1)
+
+    def evaluate_lic_11(self):
+        return lic_11_check(self._POINTS, self.NUMPOINTS, self.G_PTS)
+
+    def evaluate_lic_12(self):
+        return lic_12_check(self._POINTS, self.NUMPOINTS, self.K_PTS, self.LENGTH1, self.LENGTH2)
+
+    def evaluate_lic_13(self):
+        return lic_13_check(self._POINTS, self.RADIUS1, self.RADIUS2, self.A_PTS, self.B_PTS)
+
+    def evaluate_lic_14(self):
+        return lic_14_check(self._POINTS, self.E_PTS, self.F_PTS, self.AREA1, self.AREA2)
+
     def calculate_CMV(self):
         """
         Compute the Conditions Met Vector (CMV).
@@ -86,7 +146,6 @@ class Decide:
         # Mapping of LIC indices to their corresponding evaluation methods
         LIC_methods = [
             # boilerplate code for LICs
-            # TODO: replace with actual LIC methods
             self.evaluate_lic_0,
             self.evaluate_lic_1,
             self.evaluate_lic_2,
@@ -159,9 +218,11 @@ class Decide:
         self.calculate_FUV()
 
         # If all values in the FUV are True, launch is permitted
-        self._LAUNCH = "YES" if all(self.FUV) else "NO"
+        self._LAUNCH = "YES" if all(self._FUV) else "NO"
         return self._LAUNCH
 
 
 if __name__ == "__main__":
-    decide = Decide()
+    numpoints, data_points, parameters, lcm, puv = gen_input("../test_cases/test_case_1")
+    decide = Decide(numpoints, data_points, parameters, lcm, puv)
+    print(decide.decide())
