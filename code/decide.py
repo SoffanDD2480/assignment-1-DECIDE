@@ -9,7 +9,7 @@ def gen_input(file_path):
     data_points = [tuple(map(float, line.split()))
                    for line in lines[1:numpoints + 1]]
     float_parameters = list(map(float, lines[numpoints + 1:numpoints + 9]))
-    int_parameters = list(map(float, lines[numpoints + 9:numpoints + 20]))
+    int_parameters = list(map(int, lines[numpoints + 9:numpoints + 20]))
     parameters = float_parameters + int_parameters
     lcm = [line.split() for line in lines[numpoints + 20:numpoints + 35]]
     puv = [line == 'true' for line in lines[numpoints+35:]]
@@ -38,8 +38,8 @@ class Decide:
         self.RADIUS2 = parameters[5]
         self.AREA2 = parameters[6]
         self.DIST = parameters[7]
-        self.QUADS = parameters[9]
-        self.Q_PTS = parameters[8]
+        self.QUADS = parameters[8]
+        self.Q_PTS = parameters[9]
         self.N_PTS = parameters[10]
         self.K_PTS = parameters[11]
         self.A_PTS = parameters[12]
