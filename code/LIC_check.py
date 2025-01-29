@@ -223,7 +223,7 @@ def lic_7_check(data_points, k_pts, length1):
     points apart with distance LENGTH1 between them, False
     otherwise.
     """
-    if len(data_points) < 3 or len(data_points)-2 < k_pts:
+    if len(data_points) < 3 or len(data_points)-2 < k_pts or k_pts < 1:
         return False
     for index in range(len(data_points) - k_pts - 1):
         p1 = data_points[index]
@@ -273,7 +273,7 @@ def lic_9_check(data_points, c_pts, d_pts, epsilon):
     if there exits 3 points, separated by C PTs and
     D PTS respectively, that form an angle that fulfills
     |angle - PI| > Epsilon"""
-    if len(data_points) < 3 + c_pts + d_pts:
+    if len(data_points) < 3 + c_pts + d_pts or c_pts < 1 or d_pts < 1:
         return False
     for index in range(len(data_points) - c_pts - d_pts - 2):
         p1, p2, p3 = (data_points[index],
@@ -400,7 +400,7 @@ def lic_13_check(data_points, radius1, radius2, a_pts, b_pts):
     Condition B: There exists at least one set of three data points
     separated by exactly a_pts and b_pts intervening points, respectively,
     that can be contained by a circle of radius radius2. """
-    if len(data_points) < a_pts + b_pts + 3 or len(data_points) < 5:
+    if len(data_points) < a_pts + b_pts + 3 or len(data_points) < 5 or a_pts < 1 or b_pts < 1:
         return False
     condition_a = False
     condition_b = False
@@ -436,6 +436,8 @@ def lic_13_check(data_points, radius1, radius2, a_pts, b_pts):
             condition_b = True
         if condition_a and condition_b:
             return True
+    if condition_a and condition_b:
+        return True
     return False
 
 
