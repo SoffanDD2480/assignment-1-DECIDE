@@ -7,31 +7,31 @@ The program evaluates a set of launch conditions (LIC - *Launch Interceptor Cond
 
 The algorithm analyzes the coordinates of the given points and compares them with 15 predetermined conditions, after this it then uses a logic matrix (*LCM*) and an unlock vector (*PUV*) to combine the results of these conditions. 
 If all the necessary conditions are met, the system generates a signal authorizing the launch.
-→
+
 ---
 
 ## 📂 Project Structure
 
 ```
 .github/workflows/
-├── mock-pull-request.json → #Configuration for pull request tests
-├── python-tests.yml → #Pipeline for automated Python tests
+├── mock-pull-request.json → Configuration for pull request tests
+├── python-tests.yml → Pipeline for automated Python tests
 
 src/decide/
-├── __init__.py → #Initialization of the main module
-├── decide.py → #Main logic for decision management
-├── helpers.py → #Supporting functions for the decide module
-├── lic.py → #Implementation of the Launch Interceptor Conditions (LIC)
+├── __init__.py → Initialization of the main module
+├── decide.py → Main logic for decision management
+├── helpers.py → Supporting functions for the decide module
+├── lic.py → Implementation of the Launch Interceptor Conditions (LIC)
 
 tests/
-├── test_decide_class.py → #Tests for the main logic
-├── test_helpers.py → #Tests for helper functions
-├── test_lic.py → #Tests for the launch conditions (LIC)
+├── test_decide_class.py → Tests for the main logic
+├── test_helpers.py → Tests for helper functions
+├── test_lic.py → Tests for the launch conditions (LIC)
 
-.gitignore → #File to ignore specific files and directories
-LICENSE → #Project license
-README.md → #Project documentation
-decide.pdf → #Assignment Requests
+.gitignore → File to ignore specific files and directories
+LICENSE → Project license
+README.md → Project documentation
+decide.pdf → Assignment Requests
 
 ```
 
