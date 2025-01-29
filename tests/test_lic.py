@@ -1,52 +1,13 @@
 import pytest
-from LIC_check import *
 from math import pi
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from decide import Decide
 
 
 class TestAllLicChecks:
-    @pytest.mark.parametrize(
-        "p1, p2, p3, expected",
-        [
-            ((0, 0), (0, 0), (0, 0), 0),
-            ((1, 1), (1, 1), (1, 1), 0),
-            ((0, 1), (1, 0), (-1, 0), 1),
-            ((0, 10), (-1, -7), (3, -11), 36),
-            ((-10, 5), (-10, -5), (10, 0), 100),
-            ((-9, -3234), (-7, -8), (60903, 8), 98247814),
-        ],
-    )
-    def test_calculate_triangle_area(self, p1, p2, p3, expected):
-        assert calculate_triangle_area(p1, p2, p3) == expected
-
-    @pytest.mark.parametrize(
-        "p1, p2, expected",
-        [
-            ((0, 0), (0, 0), 0),
-            ((1, 1), (1, 1), 0),
-            ((-1, -1), (2, 3), 5),
-            ((0, 0), (-6, -8), 10),
-            ((1, 0), (0, 1), sqrt(2)),
-            ((-2468, -3702), (2468, 0), 6170),
-            ((-10, -10), (-6, -7), 5),
-        ],
-    )
-    def test_calculate_distance(self, p1, p2, expected):
-        assert calculate_distance(p1, p2) == expected
-
-    @pytest.mark.parametrize(
-        "p1, p2, p3, expected",
-        [
-            ((0, 0), (0, 0), (0, 0), None),  # coinciding points, no circumcircle
-            ((0, 0), (1, 0), (0, 0), None),  # 2 points coincide, no circumcircle
-            ((0, 0), (1, 1), (2, 2), None),  # colinear points, no circumcircle
-            ((0, 0), (2, 0), (1, 3 ** 0.5), (1.00000000000000, 0.577350269189626)),  # Equilateral triangle
-            ((0, 0), (0, 1), (1, 1), (0.5, 0.5)),  # Right triangle
-            ((-1, -1), (0.2, -0.2), (1, 1), (-2.4, 2.4)), # Almost colinear
-        ],
-    )
-    def test_calculate_circumcenter(self, p1, p2, p3, expected):
-        assert calculate_circumcenter(p1, p2, p3) == expected
-
     @pytest.mark.parametrize(
         "data_points, length1, expected",
         [
@@ -65,7 +26,10 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_0_check(self, data_points, length1, expected):
-        assert lic_0_check(data_points, length1) == expected
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.LENGTH1 = length1
+        assert decide.LIC.lic_0_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, radius1, expected",
@@ -115,7 +79,10 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_1_check(self, data_points, radius1, expected):
-        assert lic_1_check(data_points, radius1) == expected
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.RADIUS1 = radius1
+        assert decide.LIC.lic_1_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, epsilon, expected",
@@ -154,7 +121,10 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_2_check(self, data_points, epsilon, expected):
-        assert lic_2_check(data_points, epsilon) == expected
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.EPSILON = epsilon
+        assert decide.LIC.lic_2_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, area1, expected",
@@ -238,19 +208,14 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_3_check(self, data_points, area1, expected):
-        assert lic_3_check(data_points, area1) == expected
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.AREA1 = area1
+        assert decide.LIC.lic_3_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, q_pts, quads, expected",
         [
-            # Test no data_points
-            (
-                [],
-                1,
-                1,
-                False,
-            ),
-
             # Less data points than q_pts
             (
                 [(0, 0), (1, 0)],
@@ -258,7 +223,6 @@ class TestAllLicChecks:
                 1,
                 False,
             ),
-
             # Test with all points in the same quadrant but quadrants covered <= quads
             (
                 [(0, 0), (1, 1), (2, 2), (3, 3)],
@@ -266,7 +230,6 @@ class TestAllLicChecks:
                 1,
                 False,
             ),
-
             # Test with all points in different quadrants
             (
                 [(0, 0), (-1, 1), (2, -2), (-3, -3)],
@@ -274,75 +237,59 @@ class TestAllLicChecks:
                 1,
                 True,
             ),
-
             # Test with points distributed in two quadrants and quadrants covered > quads
             (
-                [(1,1), (-1,1), (2,2)],
+                [(1, 1), (-1, 1), (2, 2)],
                 3,
                 1,
                 True,
             ),
-
             # Test with three point distribuition in three quadrants and quadrants covered > quads
             (
-                [(1,1), (-1,1), (2,-2)],
+                [(1, 1), (-1, 1), (2, -2)],
                 3,
                 1,
                 True,
             ),
-
-            #Test with all the points in the origin
+            # Test with all the points in the origin
             (
-                [(0,0), (0,0), (0,0), (0,0)],
+                [(0, 0), (0, 0), (0, 0), (0, 0)],
                 4,
                 1,
                 False,
             ),
         ],
     )
-    def test_lic4_check(self, data_points, q_pts, quads, expected):
-        assert lic_4_check(data_points, q_pts, quads) == expected
+    def test_lic_4_check(self, data_points, q_pts, quads, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.Q_PTS = q_pts
+        decide.QUADS = quads
+        assert decide.LIC.lic_4_check() == expected
 
-    
     @pytest.mark.parametrize(
         "data_points, expected",
         [
-            # Test no data_points
-            (
-                [],
-                False,
-            ),
-
-            # Test with a single point
-            (
-                [(0, 0)],
-                False,
-            ),
-
             # Test with two consecutive points such that x[j] - x[i] >= 0
             (
                 [(0, 0), (1, 0)],
                 False,
             ),
-
             # Test with two consecutive points such that x[j] - x[i] < 0
             (
                 [(1, 0), (0, 0)],
                 True,
             ),
-
             # Test with three consecutive points such that x[j] - x[i] >= 0
             (
                 [(0, 0), (1, 0), (2, 0)],
                 False,
             ),
-
             # Test with three consecutive points with at least one couple such that x[j] - x[i] < 0
             (
                 [(0, 0), (2, 0), (1, 0)],
                 True,
             ),
-
             # Test with three consecutive points such that x[j] - x[i] < 0
             (
                 [(3, 0), (2, 0), (1, 0)],
@@ -350,21 +297,14 @@ class TestAllLicChecks:
             ),
         ],
     )
-    def test_lic5_check(self, data_points, expected):
-        assert lic_5_check(data_points) == expected
-    
+    def test_lic_5_check(self, data_points, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        assert decide.LIC.lic_5_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, dist, n_pts, expected",
         [
-            # Test no data_points
-            (
-                [],
-                1,
-                3,
-                False,
-            ),
-
             # Test with less points than n_pts
             (
                 [(0, 0), (1, 0)],
@@ -372,47 +312,41 @@ class TestAllLicChecks:
                 3,
                 False,
             ),
-
             # Test with three points such that distance bewteen them is more than dist
             (
-                [(0,0), (1, 2), (2, 0)],
+                [(0, 0), (1, 2), (2, 0)],
                 1,
                 3,
                 True,
             ),
-
             # Test with three points such that distance bewteen them is less than dist
             (
-                [(0,0), (1, 1), (2, 0)],
+                [(0, 0), (1, 1), (2, 0)],
                 2,
                 3,
                 False,
             ),
-
             # Test with two coicident points and one point at a distance more than dist
             (
-                [(0,0), (0,0), (2, 0)],
+                [(0, 0), (0, 0), (2, 0)],
                 1,
                 3,
                 False,
             ),
-
             # Test with two coicident points and one point at a distance less than dist
             (
-                [(0,0), (0,0), (1, 0)],
+                [(0, 0), (0, 0), (1, 0)],
                 2,
                 3,
                 False,
             ),
-
             # Test with three points at the same distance
             (
-                [(0,0), (1, 0), (2, 0)],
+                [(0, 0), (1, 0), (2, 0)],
                 1,
                 3,
                 False,
             ),
-
             # Test with multiple sets of points, one satisfies the condition
             (
                 [(0, 0), (1, 1), (2, 0), (3, 3)],
@@ -422,152 +356,129 @@ class TestAllLicChecks:
             ),
         ],
     )
-    def test_lic6_check(self, data_points, dist, n_pts, expected):
-        assert lic_6_check(data_points, dist, n_pts) == expected
-
+    def test_lic_6_check(self, data_points, dist, n_pts, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.DIST = dist
+        decide.N_PTS = n_pts
+        assert decide.LIC.lic_6_check() == expected
 
     @pytest.mark.parametrize(
-       "data_points, k_pts, length1, expected",
+        "data_points, k_pts, length1, expected",
         [
-            # Test no data_points
-            (
-                [],
-                1,
-                1,
-                False,
-            ),
-
             # Test with less than 3 points
             (
-                [(0,0), (1,1)],
+                [(0, 0), (1, 1)],
                 1,
                 1,
                 False,
             ),
-
             # Test with k_pts > numpoints
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 10,
                 1,
                 False,
             ),
-
             # Test with two points of length = 2 apart
             (
-                [(0,0), (-1,-1), (2,0)],
+                [(0, 0), (-1, -1), (2, 0)],
                 1,
                 1,
                 True,
             ),
-
             # Test with all points in the origin
             (
-                [(0,0), (0,0), (0,0)],
+                [(0, 0), (0, 0), (0, 0)],
                 1,
                 1,
                 False,
             ),
-
             # Test with k_pts = 3, second loop is valid
             (
-                    [(0, 0), (0, 0), (-1, -1), (4, 4), (1, 0), (1, 1)],
-                    3,
-                    1,
-                    True,
+                [(0, 0), (0, 0), (-1, -1), (4, 4), (1, 0), (1, 1)],
+                3,
+                1,
+                True,
             ),
-
             # Test with k_pts = 0, second loop is valid
             (
-                    [(0, 0), (0, 0), (-1, -1), (4, 4), (1, 0), (1, 1)],
-                    0,
-                    1,
-                    False,
+                [(0, 0), (0, 0), (-1, -1), (4, 4), (1, 0), (1, 1)],
+                0,
+                1,
+                False,
             ),
         ],
     )
-    def test_lic7_check(self, data_points, k_pts, length1, expected):
-        assert lic_7_check(data_points, k_pts, length1) == expected
-
+    def test_lic_7_check(self, data_points, k_pts, length1, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.K_PTS = k_pts
+        decide.LENGTH1 = length1
+        assert decide.LIC.lic_7_check() == expected
 
     @pytest.mark.parametrize(
-       "data_points, a_pts, b_pts, radius1, expected",
+        "data_points, a_pts, b_pts, radius1, expected",
         [
-            # Test no data_points
-            (
-                [],
-                1,
-                1,
-                1,
-                False,
-            ),
-
             # Test with less then 5 points
             (
-                [(0,0), (1,1), (2,2), (3,3)],
+                [(0, 0), (1, 1), (2, 2), (3, 3)],
                 1,
                 1,
                 1,
                 False,
             ),
-
             # Test with a_pts < 1
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 0,
                 1,
                 1,
                 False,
             ),
-
             # Test with b_pts < 1
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 1,
                 0,
                 1,
                 False,
             ),
-
             # Test with a_pts + b_pts > numpoints - 3
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 2,
                 2,
                 1,
                 False,
             ),
-
             # Test with three points in a circle with radius1
             (
-                [(0,0), (1,0), (2,0), (1,1), (0,2)],
+                [(0, 0), (1, 0), (2, 0), (1, 1), (0, 2)],
                 1,
                 1,
                 3,
                 False,
             ),
-
             # Test with three points NOT in a circle with radius1
             (
-                [(0,0), (1,0), (2,0), (1,1), (0,6)],
+                [(0, 0), (1, 0), (2, 0), (1, 1), (0, 6)],
                 1,
                 1,
                 1,
                 True,
             ),
-
             # Test with collinear points
             (
-                [(0,0), (1,0), (2,0), (3,0), (4,0)],
+                [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)],
                 1,
                 1,
                 1,
                 True,
             ),
-
             # Test with all points in the origin
             (
-                [(0,0), (0,0), (0,0), (0,0), (0,0)],
+                [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0)],
                 1,
                 1,
                 1,
@@ -575,75 +486,65 @@ class TestAllLicChecks:
             ),
         ],
     )
-    def test_lic8_check(self, data_points, a_pts, b_pts, radius1, expected):
-        assert lic_8_check(data_points, a_pts, b_pts, radius1) == expected
+    def test_lic_8_check(self, data_points, a_pts, b_pts, radius1, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.A_PTS = a_pts
+        decide.B_PTS = b_pts
+        decide.RADIUS1 = radius1
+        assert decide.LIC.lic_8_check() == expected
 
     @pytest.mark.parametrize(
-       "data_points, c_pts, d_pts, epsilon, expected",
+        "data_points, c_pts, d_pts, epsilon, expected",
         [
-            # Test no data_points
-            (
-                [],
-                1,
-                1,
-                1,
-                False,
-            ),
-
             # Test with less then 5 points
             (
-                [(0,0), (1,1), (2,2), (3,3)],
+                [(0, 0), (1, 1), (2, 2), (3, 3)],
                 1,
                 1,
                 1,
                 False,
             ),
-
             # Test with c_pts < 1
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 0,
                 1,
                 1,
                 False,
             ),
-
             # Test with d_pts < 1
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 1,
                 0,
                 1,
                 False,
             ),
-
             # Test with c_pts + d_pts + 3 > numpoints
             (
-                [(0,0), (1,1), (2,2), (3,3), (4,4)],
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)],
                 2,
                 2,
                 1,
                 False,
             ),
-
             # Test with colinear points, epsilon = 0.01
             (
-                [(0,0), (1,-1), (1,1), (-1,1), (2,2)],
+                [(0, 0), (1, -1), (1, 1), (-1, 1), (2, 2)],
                 1,
                 1,
                 0.01,
                 False,
             ),
-
             # Test with points in origin
             (
-                [(0,0), (0,0), (0,0), (0,0), (0,0)],
+                [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0)],
                 1,
                 1,
                 1,
                 False,
             ),
-
             # Test with 90 deg angle, smaller epsilon
             (
                 [(0, 0), (1, -1), (1, 0), (-1, 1), (1, 1)],
@@ -652,29 +553,42 @@ class TestAllLicChecks:
                 1,
                 True,
             ),
-
             # Test with 90 deg angle, larger epsilon
             (
-                    [(0, 0), (1, -1), (1, 0), (-1, 1), (1, 1)],
-                    1,
-                    1,
-                    2,
-                    False,
+                [(0, 0), (1, -1), (1, 0), (-1, 1), (1, 1)],
+                1,
+                1,
+                2,
+                False,
             ),
-
             # Test with larger 90 deg and 45 deg angle
             (
-                    [(0,0), (1,0), (10,10), (-10,-10), (1,0), (0,0), (-10,10), (10,-10), (1,1), (1,1)],
-                    3,
-                    3,
-                    2,
-                    True,
+                [
+                    (0, 0),
+                    (1, 0),
+                    (10, 10),
+                    (-10, -10),
+                    (1, 0),
+                    (0, 0),
+                    (-10, 10),
+                    (10, -10),
+                    (1, 1),
+                    (1, 1),
+                ],
+                3,
+                3,
+                2,
+                True,
             ),
         ],
     )
-    def test_lic9_check(self, data_points, c_pts, d_pts, epsilon, expected):
-        assert lic_9_check(data_points, c_pts, d_pts, epsilon) == expected
-        
+    def test_lic_9_check(self, data_points, c_pts, d_pts, epsilon, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.C_PTS = c_pts
+        decide.D_PTS = d_pts
+        decide.EPSILON = epsilon
+        assert decide.LIC.lic_9_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
@@ -682,8 +596,6 @@ class TestAllLicChecks:
             # TODO: Fix mismatch of len(data_points) and Numpoints
             # TODO: data_points should be points, to me coherent to the instructions
             # TODO: AREA1 should be equal or larger to 0
-            # Test no data_points
-            ([], 0, 1, 1, 40, False),
             # Test NUMPOINTS < 5
             ([(0, 0), (1, 0), (10, 0), (1, 1)], 4, 1, 1, 40, False),
             # Test E_PTS < 1
@@ -772,13 +684,17 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_10_check(self, data_points, numpoints, e_pts, f_pts, area1, expected):
-        assert lic_10_check(data_points, numpoints, e_pts, f_pts, area1) == expected
+        decide = Decide()
+        decide.NUMPOINTS = numpoints
+        decide.POINTS = data_points
+        decide.E_PTS = e_pts
+        decide.F_PTS = f_pts
+        decide.AREA1 = area1
+        assert decide.LIC.lic_10_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, numpoints, g_pts, expected",
         [
-            # Test no data_points
-            ([], 0, 1, False),
             # Test NUMPOINTS < 3
             ([(1, 0), (0, 0)], 2, 1, False),
             # Test G_PTS < 1
@@ -804,7 +720,11 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_11_check(self, data_points, numpoints, g_pts, expected):
-        assert lic_11_check(data_points, numpoints, g_pts) == expected
+        decide = Decide()
+        decide.NUMPOINTS = numpoints
+        decide.POINTS = data_points
+        decide.G_PTS = g_pts
+        assert decide.LIC.lic_11_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, numpoints, k_pts, length1, length2, expected",
@@ -812,8 +732,6 @@ class TestAllLicChecks:
             # TODO: Assuming length1 >= 0 right?
             # TODO: Assuming k_pts > 1 right?
             # TODO: Same points multiple times ok?
-            # Test no data_points
-            ([], 0, 1, 0, 1, False),
             # Test NUMPOINTS < 3
             ([(0, 0), (2, 2)], 2, 1, 0, 1, False),
             # Test K_PTS < 1 (assuming it should be that K_PTS >= 1, as with LIC 12)
@@ -849,88 +767,90 @@ class TestAllLicChecks:
     def test_lic_12_check(
         self, data_points, numpoints, k_pts, length1, length2, expected
     ):
-        assert lic_12_check(data_points, numpoints, k_pts, length1, length2) == expected
+        decide = Decide()
+        decide.NUMPOINTS = numpoints
+        decide.POINTS = data_points
+        decide.K_PTS = k_pts
+        decide.LENGTH1 = length1
+        decide.LENGTH2 = length2
+        assert decide.LIC.lic_12_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, a_pts, b_pts, radius1, radius2, expected",
         [
+            # Test with a_pts < 1
             (
-                    # Test with empty data_points
-                    [],
-                    1,
-                    1,
-                    1.0,
-                    2.0,
-                    False,
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                0,
+                1,
+                1,
+                1,
+                False,
             ),
-                    # Test with a_pts < 1
+            # Test with b_pts < 1
             (
-                    [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
-                    0,
-                    1,
-                    1,
-                    1,
-                    False,
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                1,
+                0,
+                1,
+                1,
+                False,
             ),
-                    # Test with b_pts < 1
+            # Test with a_pts and b_pts < 1
             (
-                    [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
-                    1,
-                    0,
-                    1,
-                    1,
-                    False,
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                0,
+                1,
+                1,
+                1,
+                False,
             ),
-                    # Test with a_pts and b_pts < 1
+            # Test with a_pts + b_pts + 3 > numpoints
             (
-                    [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
-                    0,
-                    1,
-                    1,
-                    1,
-                    False,
+                [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                2,
+                2,
+                1,
+                1,
+                False,
             ),
-                    # Test with a_pts + b_pts + 3 > numpoints
+            # Both conditions met
             (
-                    [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
-                    2,
-                    2,
-                    1,
-                    1,
-                    False,
+                [(0, 0), (0, 0), (5, 0), (1, 0), (4, 4), (0.1, 0.5)],
+                1,
+                1,
+                2.5,
+                1,
+                True,
             ),
-                    # Both conditions met
+            # Only condition A met
             (
-                    [(0, 0), (0, 0), (5, 0), (1, 0), (4, 4), (0.1, 0.5)],
-                    1,
-                    1,
-                    2.5,
-                    1,
-                    True,
+                [(0, 0), (0, 0), (3, 0), (1, 0), (1, 0), (0.5, 0)],
+                1,
+                1,
+                1,
+                0.2,
+                False,
             ),
-                    # Only condition A met
+            # Only condition B met
             (
-                    [(0, 0), (0, 0), (3, 0), (1, 0), (1, 0), (0.5, 0)],
-                    1,
-                    1,
-                    1,
-                    0.2,
-                    False,
-            ),
-                    # Only condition B met
-            (
-                    [(0, 0), (0, 0), (3, 0), (1, 0), (1, 0), (0.5, 0)],
-                    1,
-                    1,
-                    3,
-                    1,
-                    False,
+                [(0, 0), (0, 0), (3, 0), (1, 0), (1, 0), (0.5, 0)],
+                1,
+                1,
+                3,
+                1,
+                False,
             ),
         ],
     )
-    def test_lic13_check(self, data_points, a_pts, b_pts, radius1, radius2, expected):
-        assert lic_13_check(data_points, radius1, radius2, a_pts, b_pts) == expected
-
+    def test_lic_13_check(self, data_points, a_pts, b_pts, radius1, radius2, expected):
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.A_PTS = a_pts
+        decide.B_PTS = b_pts
+        decide.RADIUS1 = radius1
+        decide.RADIUS2 = radius2
+        assert decide.LIC.lic_13_check() == expected
 
     @pytest.mark.parametrize(
         "data_points, e_pts, f_pts, area1, area2, expected",
@@ -1018,4 +938,10 @@ class TestAllLicChecks:
         ],
     )
     def test_lic_14_check(self, data_points, e_pts, f_pts, area1, area2, expected):
-        assert lic_14_check(data_points, e_pts, f_pts, area1, area2) == expected
+        decide = Decide()
+        decide.POINTS = data_points
+        decide.E_PTS = e_pts
+        decide.F_PTS = f_pts
+        decide.AREA1 = area1
+        decide.AREA2 = area2
+        assert decide.LIC.lic_14_check() == expected

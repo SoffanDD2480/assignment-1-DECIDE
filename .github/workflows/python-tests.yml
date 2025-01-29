@@ -26,8 +26,5 @@ jobs:
           pip install pytest
           pip install sympy
 
-      - name: Run tests for code/test_LIC_check.py
-        run: pytest code/test_LIC_check.py
-
-      - name: Run tests for code/test_decide.py
-        run: pytest code/test_decide.py
+      - name: Run tests with pytest
+        run: pytest
