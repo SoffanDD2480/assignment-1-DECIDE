@@ -1,5 +1,9 @@
 import pytest
-from decide import Decide
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from decide.decide import Decide
 
 
 def test_numpoints_initial_assignment():
@@ -44,6 +48,14 @@ def test_numpoints_invalid_range():
         ValueError, match="NUMPOINTS must be an integer between 0 and 100"
     ):
         decide.NUMPOINTS = 101  # Greater than 100
+
+
+def test_points_min_length():
+    """Test that the minimum amount of POINTS can be set."""
+    decide = Decide()
+
+    decide.POINTS = [(0, 0), (1, 1)]
+    assert decide.POINTS == [(0, 0), (1, 1)], "POINTS should contain two points"
 
 
 def test_points_initial_assignment():
@@ -103,7 +115,7 @@ def test_points_length_out_of_bounds():
     decide = Decide()
 
     with pytest.raises(
-        ValueError, match="POINTS must contain between 0 and 100 points"
+        ValueError, match="POINTS must contain between 2 and 100 points"
     ):
         decide.POINTS = [(0, 0)] * 101  # More than 100 points
 
