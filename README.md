@@ -50,8 +50,7 @@ cd assignment-1-DECIDE
 ### 2️⃣ Install dependencies
 
 ```bash
-pip install pytest
-pip install sympy
+pip install python==3.11 pytest sympy
 ```
 
 ---
@@ -67,6 +66,36 @@ python src/decide/decide.py
 You can modify the parameters in `src/decide/decide.py` to test different scenarios.
 
 ---
+
+## 🛠 Running Tests
+
+The project includes automated tests using **pytest**. Tests are located in the `tests/` directory.
+
+### 🔹 Running all tests
+To run all tests in the `tests/` directory, use:
+
+```bash
+pytest tests/
+```
+
+### 🔹 Running a specific test
+To run a specific test file, specify the file name:
+
+```bash
+pytest tests/test_decide_class.py
+```
+
+To run a specific test function inside a file:
+
+```bash
+pytest tests/test_decide_class.py::test_specific_function
+```
+
+If you want to stop execution after the first failed test, use:
+
+```bash
+pytest -x tests/
+```
 
 ## 📊 How It Works
 
@@ -88,11 +117,22 @@ You can modify the parameters in `src/decide/decide.py` to test different scenar
 
 ## 🏗 Contributors
 
-- **SoffanDD2480 Team**
+**SoffanDD2480 Team**
 - Dudjfy
+    - Implemented LIC 10, LIC 11, LIC 12 Check
+    - Implement Unit Test 
 - Albinwoxnerud
+    - Fully implement Decide class
+    - Implement LIC 14 Check
+    - Implement Github action workflow for CI
+    - Refactored the code
 - eliasfrode
+    - Implement LIC 0, LIC 1, LIC 7, LIC 9, LIC 13 check
+    - Implement Unit Test 
 - riccacocco
+    - Implement LIC 2, LIC 3, LIC 4, LIC 5, LIC 6, LIC 8
+    - Implement Unit Test
+    - Updated the README and LICENSE
 
 ---
 
