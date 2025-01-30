@@ -52,10 +52,10 @@ cd assignment-1-DECIDE
 ### 2️⃣ Install Python and Pip
 
 Python may be downloaded from the [python.org](https://www.python.org/downloads/) website directly, or via a package manager 
-(such as `winget` for Windows, `brew` for macOS, `apt` for most linux systems, or your preferred package manager).
+(such as `winget` for Windows, `brew` for macOS, `apt` for most Linux systems, or your preferred package manager).
 
 After installing Python, install pip (python commands may be run with `python`, `pyhton3`, `py` or `py3`, 
-depending on system and installation):
+depending on the system and installation):
 ```bash
 python get-pip.py
 ```
@@ -87,11 +87,6 @@ To execute the program:
 
 ```bash
 python src/decide/decide.py
-```
-
-*Depending on Python installation, `python3` might be used instead:*
-```bash
-python3 src/decide/decide.py
 ```
 
 You can modify the parameters in `src/decide/decide.py` to test different scenarios.
