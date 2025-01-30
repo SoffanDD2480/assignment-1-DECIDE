@@ -146,7 +146,9 @@ pytest -x tests/
 **SoffanDD2480 Team**
 - Dudjfy
     - Implemented LIC 10, LIC 11, LIC 12 Check
-    - Implement Unit Test 
+    - Implement Unit Test
+    - Wrote Way-of-Working
+    - Update README on a smaller scale
 - Albinwoxnerud
     - Fully implement Decide class
     - Implement LIC 14 Check
