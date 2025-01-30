@@ -152,6 +152,7 @@ pytest -x tests/
 - Albinwoxnerud
     - Fully implement Decide class
     - Implement LIC 14 Check
+    - Implement Unit Test
     - Implement Github action workflow for CI
     - Refactored the code
 - eliasfrode
