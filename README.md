@@ -32,8 +32,11 @@ tests/
 LICENSE → Project license
 README.md → Project documentation
 decide.pdf → Assignment Requests
+Way-of-Working.md → Describes our current Way-of-Working, descibing at what stucture stage the team is at
 
 ```
+
+For our Way-of-working, refer to [Way-of-Work.md](Way-of-Working).
 
 ---
 
