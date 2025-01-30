@@ -49,11 +49,34 @@ git clone https://github.com/SoffanDD2480/assignment-1-DECIDE.git
 cd assignment-1-DECIDE
 ```
 
+### 2️⃣ Install Python and Pip
 
-### 2️⃣ Install dependencies
+Python may be downloaded from the [python.org](https://www.python.org/downloads/) website directly, or via a package manager 
+(such as `winget` for Windows, `brew` for macOS, `apt` for most linux systems, or your preferred package manager).
 
+After installing Python, install pip (python commands may be run with `python`, `pyhton3`, `py` or `py3`, 
+depending on system and installation):
 ```bash
-pip install python==3.11 pytest sympy
+python get-pip.py
+```
+
+### 3️⃣ Install dependencies
+
+*Similar to Python commands, `pip3` might be used instead of `pip` (this is true for all the following examples):*
+```bash
+pip install pytest sympy
+```
+
+The project used `pip 25.0` (although earlier versions of pip *might* suffice).
+
+To see your Pip version:
+```bash
+pip -V
+```
+
+To upgrade Pip to `pip 25.0` specifically
+```bash
+pip install --upgrade pip==25.0
 ```
 
 ---
@@ -64,6 +87,11 @@ To execute the program:
 
 ```bash
 python src/decide/decide.py
+```
+
+*Depending on Python installation, `python3` might be used instead:*
+```bash
+python3 src/decide/decide.py
 ```
 
 You can modify the parameters in `src/decide/decide.py` to test different scenarios.
