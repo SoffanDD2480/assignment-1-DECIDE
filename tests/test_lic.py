@@ -593,9 +593,6 @@ class TestAllLicChecks:
     @pytest.mark.parametrize(
         "data_points, numpoints, e_pts, f_pts, area1, expected",
         [
-            # TODO: Fix mismatch of len(data_points) and Numpoints
-            # TODO: data_points should be points, to me coherent to the instructions
-            # TODO: AREA1 should be equal or larger to 0
             # Test NUMPOINTS < 5
             ([(0, 0), (1, 0), (10, 0), (1, 1)], 4, 1, 1, 40, False),
             # Test E_PTS < 1
@@ -729,9 +726,6 @@ class TestAllLicChecks:
     @pytest.mark.parametrize(
         "data_points, numpoints, k_pts, length1, length2, expected",
         [
-            # TODO: Assuming length1 >= 0 right?
-            # TODO: Assuming k_pts > 1 right?
-            # TODO: Same points multiple times ok?
             # Test NUMPOINTS < 3
             ([(0, 0), (2, 2)], 2, 1, 0, 1, False),
             # Test K_PTS < 1 (assuming it should be that K_PTS >= 1, as with LIC 12)
